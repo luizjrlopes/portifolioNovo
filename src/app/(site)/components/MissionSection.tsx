@@ -1,22 +1,22 @@
 /* eslint-disable @next/next/no-img-element */
 import styled from "styled-components";
 import { hexToRgba } from "@/utils/color";
-import type { AboutContent } from "../types";
+import type { MissionContent } from "../types";
 import parseContent from "@/utils/parseContent";
 
-type AboutSectionProps = {
-  content: AboutContent;
+type MissionSectionProps = {
+  content: MissionContent;
 };
 
-const AboutSectionRoot = styled.section.attrs({
-  id: "about",
+const MissionSectionRoot = styled.section.attrs({
+  id: "mission",
   tabIndex: -1,
-  "aria-labelledby": "about-heading",
+  "aria-labelledby": "mission-heading",
 })`
   padding: 96px 0;
 `;
 
-const AboutContainer = styled.div`
+const MissionContainer = styled.div`
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 24px;
@@ -26,14 +26,14 @@ const AboutContainer = styled.div`
   background: #0f111a;
 `;
 
-const AboutTitle = styled.h2`
+const MissionTitle = styled.h2`
   margin: 0;
   text-align: center;
   font-size: clamp(1.75rem, 3vw, 2.25rem);
   color: ${({ theme }) => theme.colors.text};
 `;
 
-const AboutCard = styled.article`
+const MissionCard = styled.article`
   background: #161b22;
   border-radius: 16px;
   padding: 1.75rem;
@@ -84,7 +84,7 @@ const Paragraph = styled.p`
   }
 `;
 
-export default function AboutSection({ content }: AboutSectionProps) {
+export default function MissionSection({ content }: MissionSectionProps) {
   const { imageUrl, description, richDescription } = content;
 
   const fallbackParagraphs = description
@@ -95,10 +95,10 @@ export default function AboutSection({ content }: AboutSectionProps) {
     : [];
 
   return (
-    <AboutSectionRoot>
-      <AboutContainer>
-        <AboutTitle id="about-heading">Sobre Mim</AboutTitle>
-        <AboutCard>
+    <MissionSectionRoot>
+      <MissionContainer>
+        <MissionTitle id="mission-heading">Missão Profissional</MissionTitle>
+        <MissionCard>
           <DescriptionBlock>
             {richDescription
               ? richDescription
@@ -108,8 +108,8 @@ export default function AboutSection({ content }: AboutSectionProps) {
                   </Paragraph>
                 ))}
           </DescriptionBlock>
-        </AboutCard>
-      </AboutContainer>
-    </AboutSectionRoot>
+        </MissionCard>
+      </MissionContainer>
+    </MissionSectionRoot>
   );
 }

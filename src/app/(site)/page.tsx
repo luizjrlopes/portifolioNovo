@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Navigation from "./components/Navigation";
 import Hero from "./components/Hero";
 import AboutSection from "./components/AboutSection";
+import MissionSection from "./components/MissionSection";
 import CompetenciesSection from "./components/CompetenciesSection";
 import SoftSkillsSection from "./components/SoftSkillsSection";
 import ProjectsSection from "./components/ProjectsSection";
@@ -19,6 +20,7 @@ import { competenciesTabsContent } from "./mock/competencies";
 import { softSkillsContent } from "./mock/softSkills";
 import type { ArticleSummary } from "./types";
 import { getArticlesIndex } from "./services/blobStorage";
+import { missionContent } from "./mock/mission";
 
 const PageWrapper = styled.div`
   position: relative;
@@ -72,6 +74,7 @@ export default function Home() {
       <MainContent>
         <Hero content={heroContent} />
         <AboutSection content={aboutContent} />
+        <MissionSection content={missionContent} />
         <CompetenciesSection content={competenciesTabsContent} />
         <SoftSkillsSection content={softSkillsContent} />
         <ProjectsSection projects={projects} />

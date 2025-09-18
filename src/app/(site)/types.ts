@@ -11,6 +11,11 @@ export type AboutContent = {
   description?: string;
   richDescription?: ReactNode;
 };
+export type MissionContent = {
+  imageUrl: string;
+  description?: string;
+  richDescription?: ReactNode;
+};
 
 export interface CompetencyCategory {
   titulo: string;
