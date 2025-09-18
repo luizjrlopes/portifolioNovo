@@ -1,5 +1,5 @@
 // mock/hero.ts
-import type { HeroContent } from "./../types/hero";
+import type { HeroContent } from "../types/hero";
 import FotoPerfil from "@/public/assets/geral/fotoPerfil.jpg";
 // Suponha que, no server, você já tenha gerado:
 // const heroImageUrl = blobUrl("hero", "bg-portfolio-001.jpg");
