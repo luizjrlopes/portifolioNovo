@@ -1,21 +1,23 @@
-import { useMemo, useState } from "react";
+"use client";
+
+import { useCallback, useEffect, useState, useMemo } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 import styled from "styled-components";
 import { hexToRgba } from "@/utils/color";
 import type { ProjectPreview } from "../types";
 
-type ProjectsSectionProps = {
-  projects?: ProjectPreview[];
-};
+type Props = { projects?: ProjectPreview[] };
 
-const ProjectsSectionRoot = styled.section.attrs({
+// ====== estilos (reaproveitando os seus) ======
+const Root = styled.section.attrs({
   id: "projects",
   tabIndex: -1,
   "aria-labelledby": "projects-heading",
 })`
   padding: 96px 0;
 `;
-
-const ProjectsContainer = styled.div`
+const Container = styled.div`
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 24px;
@@ -23,42 +25,32 @@ const ProjectsContainer = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing(4)};
 `;
-
-const SectionTitle = styled.h2`
+const Title = styled.h2`
   margin: 0;
   text-align: center;
   font-size: clamp(1.75rem, 3vw, 2.25rem);
   color: ${({ theme }) => theme.colors.text};
 `;
 
-const CarouselShell = styled.div`
-  position: relative;
-`;
-
-const CarouselViewport = styled.div`
+const Viewport = styled.div`
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radius};
   border: 1px solid ${({ theme }) => theme.colors.border};
   background: ${({ theme }) => theme.colors.card};
 `;
 
-const Slides = styled.div<{ $index: number }>`
+const ContainerTrack = styled.div`
   display: flex;
-  transition: transform 0.5s ease;
-  transform: ${({ $index }) => `translateX(-${$index * 100}%)`};
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
+  touch-action: pan-y pinch-zoom;
+  will-change: transform;
 `;
-
 const Slide = styled.div`
-  width: 100%;
-  flex-shrink: 0;
+  flex: 0 0 100%;
+  min-width: 0;
   padding: 48px 24px;
+  box-sizing: border-box;
 `;
-
-const SlideCard = styled.article`
+const Card = styled.article`
   max-width: 520px;
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacing(4)};
@@ -70,19 +62,16 @@ const SlideCard = styled.article`
   display: grid;
   gap: ${({ theme }) => theme.spacing(2)};
 `;
-
 const SlideTitle = styled.h3`
   margin: 0;
   font-size: 1.4rem;
   color: ${({ theme }) => theme.colors.text};
 `;
-
 const SlideStack = styled.p`
   margin: 0;
   font-size: 0.95rem;
   color: ${({ theme }) => hexToRgba(theme.colors.text, 0.6)};
 `;
-
 const SlideLink = styled.a`
   justify-self: center;
   display: inline-flex;
@@ -95,19 +84,14 @@ const SlideLink = styled.a`
   font-weight: 600;
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 12px 24px ${({ theme }) => hexToRgba(theme.colors.accent, 0.3)};
+    box-shadow: 0 12px 24px
+      ${({ theme }) => hexToRgba(theme.colors.accent, 0.3)};
   }
-
   &:focus-visible {
     outline: 2px solid ${({ theme }) => theme.colors.accent};
     outline-offset: 3px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
   }
 `;
 
@@ -125,42 +109,27 @@ const NavButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.accent};
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${({ theme }) => theme.colors.accent};
-    outline-offset: 3px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 `;
-
 const PrevButton = styled(NavButton)`
   left: 18px;
 `;
-
 const NextButton = styled(NavButton)`
   right: 18px;
 `;
-
 const NavIcon = styled.span`
   font-size: 1.125rem;
   font-weight: 600;
 `;
 
+const Shell = styled.div`
+  position: relative;
+`;
 const Dots = styled.div`
   margin-top: ${({ theme }) => theme.spacing(3)};
   display: flex;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing(1)};
 `;
-
 const Dot = styled.button<{ $active: boolean }>`
   width: ${({ $active }) => ($active ? 24 : 10)}px;
   height: 10px;
@@ -169,85 +138,115 @@ const Dot = styled.button<{ $active: boolean }>`
   cursor: pointer;
   background: ${({ theme, $active }) =>
     $active ? theme.colors.accent : hexToRgba(theme.colors.text, 0.4)};
-  transition: width 0.2s ease, background-color 0.2s ease;
-
-  &:focus-visible {
-    outline: 2px solid ${({ theme }) => theme.colors.accent};
-    outline-offset: 2px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    transition: none;
-  }
 `;
 
-export default function ProjectsSection({ projects }: ProjectsSectionProps) {
+// ====== componente ======
+export default function ProjectsSection({ projects }: Props) {
   const items = useMemo<ProjectPreview[]>(() => projects ?? [], [projects]);
-  const total = items.length;
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [selected, setSelected] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, align: "start", skipSnaps: false },
+    [Autoplay({ delay: 5500, stopOnInteraction: false })]
+  );
 
-  const goTo = (index: number) => {
-    if (total === 0) return;
-    const normalized = (index + total) % total;
-    setCurrentIndex(normalized);
-  };
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelected(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
 
-  const handlePrev = () => goTo(currentIndex - 1);
-  const handleNext = () => goTo(currentIndex + 1);
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onSelect);
+    // Cleanup listeners on unmount or emblaApi change
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  const scrollPrev = useCallback(
+    () => emblaApi && emblaApi.scrollPrev(),
+    [emblaApi]
+  );
+  const scrollNext = useCallback(
+    () => emblaApi && emblaApi.scrollNext(),
+    [emblaApi]
+  );
+  const scrollTo = useCallback(
+    (i: number) => emblaApi && emblaApi.scrollTo(i),
+    [emblaApi]
+  );
+
+  if (!items.length) return null;
 
   return (
-    <ProjectsSectionRoot>
-      <ProjectsContainer>
-        <SectionTitle id="projects-heading">Projetos</SectionTitle>
-        <CarouselShell>
-          <CarouselViewport>
-            <Slides $index={currentIndex}>
-              {items.map(({ title, stack, href }) => (
-                <Slide key={title}>
-                  <SlideCard>
+    <Root aria-roledescription="carousel" aria-label="Projetos">
+      <Container>
+        <Title id="projects-heading">Projetos</Title>
+
+        <Shell>
+          <Viewport
+            ref={emblaRef}
+            onKeyDown={(e) => {
+              if (e.key === "ArrowLeft") scrollPrev();
+              if (e.key === "ArrowRight") scrollNext();
+            }}
+            tabIndex={0}
+            aria-live="polite"
+          >
+            <ContainerTrack>
+              {items.map(({ title, stack, href }, i) => (
+                <Slide
+                  key={title}
+                  role="group"
+                  aria-roledescription="slide"
+                  aria-label={`${i + 1} de ${items.length}`}
+                >
+                  <Card>
                     <SlideTitle>{title}</SlideTitle>
                     <SlideStack>{stack}</SlideStack>
-                    <SlideLink href={href}>
-                      Ver no GitHub
-                    </SlideLink>
-                  </SlideCard>
+                    <SlideLink href={href}>Ver no GitHub</SlideLink>
+                  </Card>
                 </Slide>
               ))}
-            </Slides>
-          </CarouselViewport>
+            </ContainerTrack>
+          </Viewport>
 
-          {total > 1 && (
+          {items.length > 1 && (
             <>
-              <PrevButton type="button" onClick={handlePrev} aria-label="Projeto anterior">
+              <PrevButton
+                type="button"
+                onClick={scrollPrev}
+                aria-label="Projeto anterior"
+              >
                 <NavIcon aria-hidden="true">&lt;</NavIcon>
               </PrevButton>
-              <NextButton type="button" onClick={handleNext} aria-label="Proximo projeto">
+              <NextButton
+                type="button"
+                onClick={scrollNext}
+                aria-label="Próximo projeto"
+              >
                 <NavIcon aria-hidden="true">&gt;</NavIcon>
               </NextButton>
             </>
           )}
-        </CarouselShell>
+        </Shell>
 
-        {total > 1 && (
+        {items.length > 1 && (
           <Dots>
-            {items.map((item, index) => {
-              const isActive = index === currentIndex;
-              return (
-                <Dot
-                  key={item.title}
-                  type="button"
-                  $active={isActive}
-                  onClick={() => goTo(index)}
-                  aria-label={`Ir para o projeto ${item.title}`}
-                  aria-current={isActive ? "page" : undefined}
-                />
-              );
-            })}
+            {items.map((it, i) => (
+              <Dot
+                key={it.title}
+                $active={i === selected}
+                onClick={() => scrollTo(i)}
+                aria-label={`Ir para o projeto ${it.title}`}
+              />
+            ))}
           </Dots>
         )}
-      </ProjectsContainer>
-    </ProjectsSectionRoot>
+      </Container>
+    </Root>
   );
 }
-
-

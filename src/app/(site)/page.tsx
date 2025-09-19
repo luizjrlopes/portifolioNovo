@@ -5,9 +5,7 @@ import styled from "styled-components";
 import Navigation from "./components/Navigation";
 import Hero from "./components/Hero";
 import AboutSection from "./components/AboutSection";
-import MissionSection from "./components/MissionSection";
 import CompetenciesSection from "./components/CompetenciesSection";
-import SoftSkillsSection from "./components/SoftSkillsSection";
 import ProjectsSection from "./components/ProjectsSection";
 import ArticlesSection from "./components/ArticlesSection";
 import CertificatesSection from "./components/CertificatesSection";
@@ -17,10 +15,9 @@ import { navLinks, projects, contactOptions, footerText } from "./mock/content";
 import { heroContent } from "./mock/hero";
 import { aboutContent } from "./mock/about";
 import { competenciesTabsContent } from "./mock/competencies";
-import { softSkillsContent } from "./mock/softSkills";
 import type { ArticleSummary } from "./types";
-import { getArticlesIndex } from "./services/blobStorage";
-import { missionContent } from "./mock/mission";
+import { articles } from "./mock/articles";
+import { certificateTabs, certificateCategories } from "./mock/certificates";
 
 const PageWrapper = styled.div`
   position: relative;
@@ -33,57 +30,19 @@ const MainContent = styled.main`
 `;
 
 export default function Home() {
-  const [articles, setArticles] = useState<ArticleSummary[]>([]);
-  const [isLoadingArticles, setIsLoadingArticles] = useState<boolean>(false);
-  const [articlesError, setArticlesError] = useState<string>("");
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadArticles = async () => {
-      setIsLoadingArticles(true);
-      setArticlesError("");
-
-      try {
-        const list = await getArticlesIndex();
-        if (!isMounted) return;
-        setArticles(list);
-      } catch (error) {
-        console.error(error);
-        if (!isMounted) return;
-        const message =
-          error instanceof Error ? error.message : "Erro ao carregar artigos";
-        setArticlesError(message);
-      } finally {
-        if (isMounted) {
-          setIsLoadingArticles(false);
-        }
-      }
-    };
-
-    void loadArticles();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   return (
     <PageWrapper>
       <Navigation links={navLinks} />
       <MainContent>
         <Hero content={heroContent} />
         <AboutSection content={aboutContent} />
-        <MissionSection content={missionContent} />
         <CompetenciesSection content={competenciesTabsContent} />
-        <SoftSkillsSection content={softSkillsContent} />
         <ProjectsSection projects={projects} />
-        <ArticlesSection
-          articles={articles}
-          isLoading={isLoadingArticles}
-          error={articlesError}
+        <ArticlesSection articles={articles} />
+        <CertificatesSection
+          tabs={certificateTabs}
+          categories={certificateCategories}
         />
-        <CertificatesSection />
         <ContactSection options={contactOptions} />
       </MainContent>
       <Footer text={footerText} />

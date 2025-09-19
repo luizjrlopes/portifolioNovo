@@ -6,13 +6,7 @@ import type { NavigationProps, NavLink } from "../../types/navigation";
 import { FEATURES } from "../../config/features";
 import { DesktopNav } from "./DesktopNav";
 import { MobileNav } from "./MobileNav";
-import {
-  Actions,
-  Brand,
-  Header,
-  HeaderCta,
-  Inner,
-} from "./styles";
+import { Actions, Brand, Header, HeaderCta, Inner } from "./styles";
 
 const DRAWER_ID = "nav-drawer";
 const SCROLL_THRESHOLD = 20;
@@ -42,9 +36,9 @@ export default function Navigation({
   const [reduceMotion, setReduceMotion] = useState(false);
 
   const activeIdRef = useRef<string | null>(null);
-  const debounceRef = useRef<number>();
-  const drawerRef = useRef<HTMLDivElement | null>(null);
-  const toggleButtonRef = useRef<HTMLButtonElement | null>(null);
+  const debounceRef = useRef<number>(0);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const toggleButtonRef = useRef<HTMLButtonElement>(null);
   const restoreFocusRef = useRef<HTMLElement | null>(null);
   const restoreOverflowRef = useRef<string | null>(null);
 
@@ -340,9 +334,7 @@ export default function Navigation({
       return null;
     }
 
-    return (
-      <HeaderCta href="#/editor">Abrir editor</HeaderCta>
-    );
+    return <HeaderCta href="#/editor">Abrir editor</HeaderCta>;
   }, []);
 
   const mobileCta = useMemo(() => {
@@ -358,9 +350,12 @@ export default function Navigation({
   }, []);
 
   return (
-    <Header $scrolled={isScrolled} $translucent={translucentOverHero} role="banner">
+    <Header
+      $scrolled={isScrolled}
+      $translucent={translucentOverHero}
+      role="banner"
+    >
       <Inner>
-        <Brand href="#home">Luiz Junior</Brand>
         <DesktopNav
           links={links}
           activeId={activeId}
@@ -385,4 +380,3 @@ export default function Navigation({
     </Header>
   );
 }
-

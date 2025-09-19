@@ -89,11 +89,10 @@ export type ContactOption = {
 };
 
 export type ArticleSummary = {
-  id: string;
-  slug: string;
   title: string;
-  description?: string;
-  heroImage?: string;
-  publishedAt?: string;
-  tags?: string[];
+  category: string;
+  date: string;
+  description: string;
+  pdfUrl: string;
+  cover: string;
 };

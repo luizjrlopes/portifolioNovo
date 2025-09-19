@@ -75,12 +75,12 @@ export const contactOptions: ContactOption[] = [
   {
     label: "E-mail",
     href: "mailto:luiz.junior@email.com",
-    display: "luiz.junior@email.com",
+    display: "luizjrlopes.tech@gmail.com",
   },
   {
     label: "LinkedIn",
-    href: "https://www.linkedin.com/in/seu-perfil",
-    display: "linkedin.com/in/seu-perfil",
+    href: "https://www.linkedin.com/in/luizjuniorlopes",
+    display: "linkedin.com/in/luizjuniorlopes",
   },
 ];
 

@@ -29,7 +29,7 @@ const AboutContainer = styled.div`
 const AboutTitle = styled.h2`
   margin: 0;
   text-align: center;
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-size: 35px;
   color: ${({ theme }) => theme.colors.text};
 `;
 

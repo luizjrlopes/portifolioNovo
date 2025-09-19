@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useMemo, useState } from "react";
 import styled from "styled-components";
@@ -47,13 +47,13 @@ const TabsBar = styled.div`
   padding-bottom: 0.5rem;
 `;
 
-const TabBtn = styled.button<{ active?: boolean }>`
+const TabBtn = styled.button<{ $active?: boolean }>`
   appearance: none;
-  background: ${({ active }) =>
-    active ? "rgba(0,173,181,.12)" : "transparent"};
-  color: ${({ active }) => (active ? "#c7fbff" : "#b9c6d2")};
+  background: ${({ $active }) =>
+    $active ? "rgba(0,173,181,.12)" : "transparent"};
+  color: ${({ $active }) => ($active ? "#c7fbff" : "#b9c6d2")};
   border: 1px solid
-    ${({ active }) => (active ? "rgba(0,173,181,.45)" : "transparent")};
+    ${({ $active }) => ($active ? "rgba(0,173,181,.45)" : "transparent")};
   padding: 0.5rem 0.9rem;
   border-radius: 9px;
   font-weight: 600;
@@ -74,14 +74,14 @@ const SubTabsBar = styled.div`
   overflow-x: auto;
 `;
 
-const SubTabBtn = styled.button<{ active?: boolean }>`
+const SubTabBtn = styled.button<{ $active?: boolean }>`
   appearance: none;
-  background: ${({ active }) =>
-    active ? "rgba(122,216,221,.16)" : "rgba(255,255,255,.04)"};
-  color: ${({ active }) => (active ? "#d7feff" : "#cfd8df")};
+  background: ${({ $active }) =>
+    $active ? "rgba(122,216,221,.16)" : "rgba(255,255,255,.04)"};
+  color: ${({ $active }) => ($active ? "#d7feff" : "#cfd8df")};
   border: 1px solid
-    ${({ active }) =>
-      active ? "rgba(122,216,221,.45)" : "rgba(255,255,255,.06)"};
+    ${({ $active }) =>
+      $active ? "rgba(122,216,221,.45)" : "rgba(255,255,255,.06)"};
   padding: 0.4rem 0.75rem;
   border-radius: 999px;
   font-size: 0.9rem;
@@ -251,7 +251,7 @@ export default function CompetenciesTabbedSection({
         {content.tabs.map((t) => (
           <TabBtn
             key={t.key}
-            active={t.key === activeTab}
+            $active={t.key === activeTab}
             onClick={() => setActiveTab(t.key)}
             aria-pressed={t.key === activeTab}
           >
@@ -270,7 +270,7 @@ export default function CompetenciesTabbedSection({
           {subTabs.map((s) => (
             <SubTabBtn
               key={s.key}
-              active={s.key === activeSub}
+              $active={s.key === activeSub}
               onClick={() => setActiveSub(s.key)}
               aria-pressed={s.key === activeSub}
             >
@@ -310,3 +310,6 @@ export default function CompetenciesTabbedSection({
     </Wrapper>
   );
 }
+
+
+
