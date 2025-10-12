@@ -25,20 +25,23 @@ type Props = {
 };
 
 const Section = styled.section`
-  padding: 72px 0;
-  background: #0f111a;
-  color: #eaeaea;
+  padding: 84px 0;
+  background: ${({ theme }) => hexToRgba(theme.colors.bg, 0.98)};
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const Container = styled.div`
   max-width: 1120px;
   margin: 0 auto;
   padding: 0 24px;
+  display: grid;
+  gap: ${({ theme }) => theme.spacing(3)};
 `;
 
 const Heading = styled.h2`
-  margin: 0 0 12px 0;
-  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  margin: 0;
+  font-size: clamp(1.8rem, 2.6vw, 2.2rem);
+  text-align: center;
 `;
 
 const TabsBar = styled.div.attrs({ role: "tablist" })`
@@ -79,8 +82,8 @@ const Shell = styled.div`
 const Viewport = styled.div`
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radius};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  background: ${({ theme }) => theme.colors.card};
+  border: 1px solid ${({ theme }) => hexToRgba(theme.colors.border, 0.7)};
+  background: ${({ theme }) => hexToRgba(theme.colors.card, 0.98)};
 `;
 const Track = styled.div`
   display: flex;
@@ -109,11 +112,11 @@ const Card = styled.button`
   grid-template-columns: 72px 1fr;
   gap: 12px;
   align-items: center;
-  padding: 14px;
-  border-radius: 14px;
-  background: ${({ theme }) => theme.colors.bg};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+  padding: 16px;
+  border-radius: 16px;
+  background: ${({ theme }) => hexToRgba(theme.colors.card, 0.98)};
+  border: 1px solid ${({ theme }) => hexToRgba(theme.colors.border, 0.7)};
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
   text-align: left;
   cursor: pointer;
   transition: transform 0.18s ease, box-shadow 0.18s ease,
@@ -121,25 +124,30 @@ const Card = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
-    border-color: rgba(0, 173, 181, 0.35);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.35);
+    border-color: ${({ theme }) => hexToRgba(theme.colors.accent, 0.6)};
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.accent};
+    outline-offset: 3px;
   }
 `;
 
 const Thumb = styled.div<{ $src?: string }>`
   width: 72px;
   height: 72px;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   position: relative;
   background: ${({ $src }) =>
     $src ? `center/cover no-repeat url(${$src})` : hexToRgba("#ffffff", 0.02)};
-  border: 1px solid ${() => hexToRgba("#ffffff", 0.06)};
+  border: 1px solid ${({ theme }) => hexToRgba(theme.colors.border, 0.6)};
   display: grid;
   place-items: center;
 
   svg {
-    color: #00adb5;
+    color: ${({ theme }) => theme.colors.accent};
   }
 `;
 
@@ -168,7 +176,7 @@ const CardTitle = styled.h3`
 const CardSummary = styled.p`
   margin: 8px 0 0;
   font-size: 0.9rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
+  color: ${({ theme }) => hexToRgba(theme.colors.textSecondary, 0.9)};
   flex-grow: 1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -182,8 +190,8 @@ const CardFooter = styled.footer`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.8rem;
-  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 0.82rem;
+  color: ${({ theme }) => hexToRgba(theme.colors.textSecondary, 0.85)};
 `;
 
 const DateDisplay = styled.time`
@@ -194,32 +202,35 @@ const OpenButton = styled.a`
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: ${({ theme }) => theme.colors.accent}20;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: ${({ theme }) => hexToRgba(theme.colors.accent, 0.15)};
   color: ${({ theme }) => theme.colors.accent};
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
 
   &:hover {
-    background: ${({ theme }) => theme.colors.accent}30;
+    transform: translateY(-1px);
+    background: ${({ theme }) => hexToRgba(theme.colors.accent, 0.25)};
   }
 `;
 
 const Dots = styled.div`
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
+  gap: 10px;
+  margin-top: 18px;
 `;
 const Dot = styled.button<{ $active: boolean }>`
-  width: ${({ $active }) => ($active ? 22 : 10)}px;
-  height: 10px;
+  width: ${({ $active }) => ($active ? 26 : 12)}px;
+  height: 12px;
   border-radius: 999px;
   border: 0;
   background: ${({ theme, $active }) =>
-    $active ? theme.colors.accent : hexToRgba(theme.colors.text, 0.4)};
+    $active
+      ? theme.colors.accent
+      : hexToRgba(theme.colors.textSecondary, 0.35)};
   transition: 0.2s ease;
 `;
 

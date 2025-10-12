@@ -3,7 +3,7 @@ import type {
   CertificateTab,
   ContactOption,
   NavLink,
-  ProjectPreview,
+  Project,
 } from "../types";
 
 export { heroContent } from "./hero";
@@ -20,21 +20,34 @@ export const navLinks: NavLink[] = [
   { id: "contact", label: "Contato", href: "#contact" },
 ];
 
-export const projects: ProjectPreview[] = [
+export const projects: Project[] = [
   {
-    title: "Projeto 1",
-    stack: "React, Node.js",
-    href: "#",
+    id: "portifolio-next",
+    title: "Portfólio Luiz Junior",
+    description:
+      "Aplicação Next.js com design responsivo para apresentar experiências, artigos e conquistas em cloud.",
+    stack: "Next.js • TypeScript • Styled-Components",
+    tags: ["Next.js", "TypeScript", "Styled Components"],
+    repoUrl: "https://github.com/luizjrlopes/portifolioNovo",
+    liveUrl: "#projects",
   },
   {
-    title: "Projeto 2",
-    stack: "React, Node.js",
-    href: "#",
+    id: "azure-automation",
+    title: "Automação Azure",
+    description:
+      "Infraestrutura como código para provisionar recursos Azure com monitoramento e alertas automatizados.",
+    stack: "Terraform • Azure Monitor • GitHub Actions",
+    tags: ["Azure", "IaC", "DevOps"],
+    repoUrl: "https://github.com/luizjrlopes/azure-automation",
   },
   {
-    title: "Projeto 3",
-    stack: "React, Node.js",
-    href: "#",
+    id: "data-pipeline",
+    title: "Pipeline de Dados Inteligente",
+    description:
+      "Pipeline ELT para ingestão, normalização e disponibilização de dados analíticos em Synapse Analytics.",
+    stack: "Azure Data Factory • Databricks • Synapse",
+    tags: ["Data", "ETL", "Synapse"],
+    repoUrl: "https://github.com/luizjrlopes/data-pipeline",
   },
 ];
 
