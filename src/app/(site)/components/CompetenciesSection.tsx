@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import type {
+  Competency,
   CompetencyTabsContent,
   CompetencyTab,
   CompetencySubTab,
@@ -215,50 +216,83 @@ const itemIconByText = (txt: string) => {
   return <ShieldCheck size={18} />;
 };
 
+type Props = {
+  competencies: Competency[];
+  title?: string;
+};
+
+function groupByCategory(list: Competency[]) {
+  const groups = new Map<string, Competency[]>();
+  for (const item of list) {
+    if (!groups.has(item.category)) groups.set(item.category, []);
+    groups.get(item.category)!.push(item);
+  }
+  return groups;
+}
+
+function groupBySubCategory(list: Competency[]) {
+  const groups = new Map<string, Competency[]>();
+  for (const item of list) {
+    if (!groups.has(item.subCategory)) groups.set(item.subCategory, []);
+    groups.get(item.subCategory)!.push(item);
+  }
+  return groups;
+}
+
 /* =============== Component =============== */
 export default function CompetenciesTabbedSection({
-  content,
-}: {
-  content: CompetencyTabsContent;
-}) {
-  const [activeTab, setActiveTab] = useState(content.tabs[0]?.key ?? "");
-  const activeTabData: CompetencyTab | undefined = useMemo(
-    () => content.tabs.find((t) => t.key === activeTab),
-    [content.tabs, activeTab]
+  competencies,
+  title = "Competências",
+}: Props) {
+  const categories = useMemo(
+    () => groupByCategory(competencies),
+    [competencies]
+  );
+  const mainTabs = useMemo(() => Array.from(categories.keys()), [categories]);
+
+  const [activeTab, setActiveTab] = useState(mainTabs[0] ?? "");
+
+  const subCategories = useMemo(() => {
+    const items = categories.get(activeTab) ?? [];
+    return groupBySubCategory(items);
+  }, [categories, activeTab]);
+
+  const subTabs = useMemo(
+    () => Array.from(subCategories.keys()),
+    [subCategories]
   );
 
-  const [activeSub, setActiveSub] = useState(
-    activeTabData?.subTabs[0]?.key ?? ""
-  );
+  const [activeSub, setActiveSub] = useState(subTabs[0] ?? "");
 
   // quando muda a aba principal, resetar a sub-aba
-  const subTabs: CompetencySubTab[] =
-    activeTabData?.subTabs ?? useMemo(() => [], [activeTabData]);
-  useMemo(() => {
-    if (subTabs.length && !subTabs.find((s) => s.key === activeSub)) {
-      setActiveSub(subTabs[0].key);
+  useEffect(() => {
+    if (subTabs.length && !subTabs.includes(activeSub)) {
+      setActiveSub(subTabs[0]);
     }
   }, [subTabs, activeSub]);
 
-  const currentSub = subTabs.find((s) => s.key === activeSub);
+  const cards = useMemo(
+    () => subCategories.get(activeSub) ?? [],
+    [subCategories, activeSub]
+  );
 
   return (
     <Wrapper>
-      <Title>{content.titulo}</Title>
+      <Title>{title}</Title>
 
       {/* Top Tabs */}
       <TabsBar>
-        {content.tabs.map((t) => (
+        {mainTabs.map((t) => (
           <TabBtn
-            key={t.key}
-            $active={t.key === activeTab}
-            onClick={() => setActiveTab(t.key)}
-            aria-pressed={t.key === activeTab}
+            key={t}
+            $active={t === activeTab}
+            onClick={() => setActiveTab(t)}
+            aria-pressed={t === activeTab}
           >
             <span
               style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
             >
-              {tabIcon(t.key)} {t.label}
+              {tabIcon(t.toLowerCase())} {t}
             </span>
           </TabBtn>
         ))}
@@ -269,12 +303,12 @@ export default function CompetenciesTabbedSection({
         <SubTabsBar>
           {subTabs.map((s) => (
             <SubTabBtn
-              key={s.key}
-              $active={s.key === activeSub}
-              onClick={() => setActiveSub(s.key)}
-              aria-pressed={s.key === activeSub}
+              key={s}
+              $active={s === activeSub}
+              onClick={() => setActiveSub(s)}
+              aria-pressed={s === activeSub}
             >
-              {s.label}
+              {s}
             </SubTabBtn>
           ))}
         </SubTabsBar>
@@ -282,15 +316,15 @@ export default function CompetenciesTabbedSection({
 
       {/* Cards */}
       <Grid>
-        {(currentSub?.cards ?? []).map((card: CompetencyCard) => (
-          <Card key={card.titulo}>
+        {cards.map((card: Competency) => (
+          <Card key={card.title}>
             <Header>
-              <div className="icon">{headingIconByTitle(card.titulo)}</div>
-              <h3>{card.titulo}</h3>
+              <div className="icon">{headingIconByTitle(card.title)}</div>
+              <h3>{card.title}</h3>
             </Header>
 
             <List>
-              {card.itens.map((it) => (
+              {card.items.map((it) => (
                 <Item key={it}>
                   {itemIconByText(it)} {it}
                 </Item>
@@ -310,6 +344,3 @@ export default function CompetenciesTabbedSection({
     </Wrapper>
   );
 }
-
-
-

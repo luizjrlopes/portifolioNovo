@@ -4,71 +4,56 @@ import ArticleModel from "@/models/Article";
 import { z } from "zod";
 import { cdn } from "@/config/cdn";
 
-const QuerySchema = z.object({
-  page: z.coerce.number().int().min(1).default(1),
-  pageSize: z.coerce.number().int().min(1).max(50).default(12),
-});
-
 const ArticleSchema = z.object({
   id: z.string(),
   title: z.string(),
   summary: z.string().optional(),
   content: z.string().optional(),
   pdfPath: z.string().optional(),
+  category: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  createdAt: z.string().optional(),
+  createdAt: z.date().transform((d) => d.toISOString()),
 });
 
 type ArticlePayload = z.infer<typeof ArticleSchema>;
 
-type ArticlesResponse = {
-  page: number;
-  pageSize: number;
-  total: number;
-  totalPages: number;
-  items: (ArticlePayload & { pdfUrl?: string })[];
-};
+export async function GET() {
+  try {
+    await dbConnect();
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const query = QuerySchema.parse({
-    page: searchParams.get("page"),
-    pageSize: searchParams.get("pageSize"),
-  });
+    const docs = await ArticleModel.find().sort({ createdAt: -1 }).lean();
 
-  await dbConnect();
+    const sanitized = docs.map((doc: any) => ({
+      id: doc.id,
+      title: doc.title,
+      summary: doc.summary,
+      content: doc.content,
+      pdfPath: doc.pdfPath,
+      category: doc.category,
+      tags: doc.tags,
+      createdAt: doc.createdAt,
+    }));
 
-  const total = await ArticleModel.countDocuments();
-  const docs = await ArticleModel.find()
-    .sort({ createdAt: -1 })
-    .skip((query.page - 1) * query.pageSize)
-    .limit(query.pageSize)
-    .lean();
+    const payload = z.array(ArticleSchema).parse(sanitized);
 
-  const sanitized = docs.map((doc) => ({
-    id: doc.id,
-    title: doc.title,
-    summary: doc.summary,
-    content: doc.content,
-    pdfPath: doc.pdfPath,
-    tags: doc.tags,
-    createdAt: doc.createdAt ? new Date(doc.createdAt).toISOString() : undefined,
-  }));
+    const items = payload.map((item) => ({
+      ...item,
+      pdfUrl: item.pdfPath ? cdn(item.pdfPath) : undefined,
+    }));
 
-  const parsed = z.array(ArticleSchema).parse(sanitized) satisfies ArticlePayload[];
-
-  const items = parsed.map((item) => ({
-    ...item,
-    pdfUrl: item.pdfPath ? cdn(item.pdfPath) : undefined,
-  }));
-
-  const body: ArticlesResponse = {
-    page: query.page,
-    pageSize: query.pageSize,
-    total,
-    totalPages: Math.ceil(total / query.pageSize),
-    items,
-  };
-
-  return NextResponse.json(body);
+    return NextResponse.json({ items });
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    // Se houver um erro de validação ou banco de dados, retorne um erro 500
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Validation error", details: error.issues },
+        { status: 400 }
+      );
+    }
+    return NextResponse.json(
+      { error: "An internal error occurred while fetching articles." },
+      { status: 500 }
+    );
+  }
 }

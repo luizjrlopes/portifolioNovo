@@ -1,16 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import styled from "styled-components";
 import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import type { CertificateTab, CertificateCategories } from "../types";
+import type { Certificate } from "../types";
 import { hexToRgba } from "@/utils/color";
 import { Award } from "lucide-react";
+import Modal from "react-modal";
 
 type Props = {
-  tabs: CertificateTab[];
-  categories: CertificateCategories;
+  certificates: Certificate[];
   title?: string;
 };
 
@@ -19,7 +20,6 @@ const Section = styled.section`
   background: #0f111a;
   color: #eaeaea;
 `;
-
 const Container = styled.div`
   max-width: 1120px;
   margin: 0 auto;
@@ -62,7 +62,6 @@ const TabBtn = styled.button<{ $active?: boolean }>`
     outline-offset: 2px;
   }
 `;
-
 const Shell = styled.div`
   position: relative;
 `;
@@ -105,13 +104,15 @@ const Card = styled.article`
   box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
 `;
 
-const Logo = styled.img`
+const Logo = styled.div`
   width: 52px;
   height: 52px;
-  object-fit: contain;
   border-radius: 8px;
   background: ${() => hexToRgba("#ffffff", 0.02)};
   border: 1px solid ${() => hexToRgba("#ffffff", 0.06)};
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
 `;
 
 const TitleRow = styled.div`
@@ -151,9 +152,19 @@ const NavButton = styled.button`
 `;
 const Prev = styled(NavButton)`
   left: 10px;
+  &::before {
+    content: "‹";
+    font-size: 18px;
+    line-height: 1;
+  }
 `;
 const Next = styled(NavButton)`
   right: 10px;
+  &::before {
+    content: "›";
+    font-size: 18px;
+    line-height: 1;
+  }
 `;
 
 const Dots = styled.div`
@@ -172,22 +183,52 @@ const Dot = styled.button<{ $active: boolean }>`
   transition: 0.2s ease;
 `;
 
+function groupByCategory(list: Certificate[]) {
+  const groups = new Map<string, Certificate[]>();
+  for (const item of list) {
+    const cat = item.category || "Todos";
+    if (!groups.has(cat)) groups.set(cat, []);
+    groups.get(cat)!.push(item);
+  }
+  return groups;
+}
+
 // ================== component ==================
 export default function CertificatesSection({
-  tabs,
-  categories,
+  certificates,
   title = "Certificados",
 }: Props) {
-  const [active, setActive] = useState<string>(
-    tabs[0]?.id ?? Object.keys(categories)[0] ?? ""
-  );
-  const items = useMemo(() => categories[active] ?? [], [categories, active]);
+  const groups = useMemo(() => groupByCategory(certificates), [certificates]);
+  const tabs = useMemo(() => Array.from(groups.keys()), [groups]);
+
+  const [active, setActive] = useState<string>(tabs[0] ?? "Todos");
+  const items = useMemo(() => groups.get(active) ?? [], [groups, active]);
 
   const [selected, setSelected] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start", skipSnaps: false },
     [Autoplay({ delay: 4500, stopOnInteraction: false })]
   );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{
+    src: string;
+    alt: string;
+    title: string;
+  } | null>(null);
+
+  const handlePreview = useCallback(
+    (src: string, alt: string, title: string) => {
+      setSelectedImage({ src, alt, title });
+      setIsModalOpen(true);
+    },
+    []
+  );
+
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setSelectedImage(null);
+  }, []);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -199,14 +240,12 @@ export default function CertificatesSection({
     onSelect();
     emblaApi.on("select", onSelect);
     emblaApi.on("reInit", onSelect);
-    // Cleanup listeners on unmount or emblaApi change
     return () => {
       emblaApi.off("select", onSelect);
       emblaApi.off("reInit", onSelect);
     };
   }, [emblaApi, onSelect]);
 
-  // re-init quando troca a aba
   useEffect(() => {
     emblaApi?.reInit();
   }, [emblaApi, items]);
@@ -218,6 +257,26 @@ export default function CertificatesSection({
     [emblaApi]
   );
 
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      background: "transparent",
+      border: "none",
+      padding: 0,
+    },
+    overlay: {
+      backgroundColor: "rgba(10, 10, 10, 0.85)",
+      zIndex: 1000,
+    },
+  };
+
+  if (!certificates?.length) return null;
+
   return (
     <Section>
       <Container>
@@ -226,14 +285,14 @@ export default function CertificatesSection({
         <TabsBar>
           {tabs.map((t) => (
             <TabBtn
-              key={t.id}
+              key={t}
               role="tab"
-              aria-selected={t.id === active}
-              aria-controls={`panel-${t.id}`}
-              $active={t.id === active}
-              onClick={() => setActive(t.id)}
+              aria-selected={t === active}
+              aria-controls={`panel-${t}`}
+              $active={t === active}
+              onClick={() => setActive(t)}
             >
-              {t.label}
+              {t}
             </TabBtn>
           ))}
         </TabsBar>
@@ -246,9 +305,7 @@ export default function CertificatesSection({
           <>
             <Shell
               aria-roledescription="carousel"
-              aria-label={`Certificados - ${
-                tabs.find((x) => x.id === active)?.label || active
-              }`}
+              aria-label={`Certificados - ${active}`}
             >
               <Viewport
                 ref={emblaRef}
@@ -266,14 +323,44 @@ export default function CertificatesSection({
                       aria-roledescription="slide"
                       aria-label={`${i + 1} de ${items.length}`}
                     >
-                      <Card>
-                        <Logo src={c.logo} alt={c.alt} />
+                      <Card
+                        onClick={() =>
+                          handlePreview(
+                            typeof c.logo === "string"
+                              ? (c.logo as string)
+                              : (c.logo as any)?.src,
+                            c.alt,
+                            c.title
+                          )
+                        }
+                      >
+                        <Logo>
+                          <Image
+                            src={c.logo}
+                            alt={c.alt}
+                            width={52}
+                            height={52}
+                            style={{
+                              objectFit: "contain",
+                              display: "block",
+                              width: 52,
+                              height: 52,
+                            }}
+                          />
+                        </Logo>
                         <div>
                           <TitleRow>
                             <Award size={16} />
                             <h3>{c.title}</h3>
                           </TitleRow>
                           <Issued>{c.issued}</Issued>
+                          {c.description ? (
+                            <p
+                              style={{ margin: "6px 0 0 0", color: "#cfd8df" }}
+                            >
+                              {c.description}
+                            </p>
+                          ) : null}
                         </div>
                       </Card>
                     </Slide>
@@ -308,6 +395,28 @@ export default function CertificatesSection({
           </>
         )}
       </Container>
+      {selectedImage && (
+        <Modal
+          isOpen={isModalOpen}
+          onRequestClose={closeModal}
+          contentLabel={selectedImage.title}
+          style={customStyles}
+        >
+          <Image
+            src={selectedImage.src}
+            alt={selectedImage.alt}
+            width={1200}
+            height={800}
+            style={{
+              maxWidth: "90vw",
+              maxHeight: "90vh",
+              objectFit: "contain",
+              width: "auto",
+              height: "auto",
+            }}
+          />
+        </Modal>
+      )}
     </Section>
   );
 }

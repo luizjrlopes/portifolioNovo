@@ -6,6 +6,7 @@ export interface Article {
   summary?: string;
   content?: string;
   pdfPath?: string;
+  category?: string;
   tags?: string[];
   createdAt?: Date;
 }
@@ -17,6 +18,7 @@ const articleSchema = new Schema<Article>(
     summary: String,
     content: String,
     pdfPath: String,
+    category: String,
     tags: [String],
   },
   { timestamps: true }

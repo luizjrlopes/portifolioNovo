@@ -5,9 +5,9 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import styled from "styled-components";
 import { hexToRgba } from "@/utils/color";
-import type { ProjectPreview } from "../types";
+import type { Project } from "../types";
 
-type Props = { projects?: ProjectPreview[] };
+type Props = { projects: Project[] };
 
 // ====== estilos (reaproveitando os seus) ======
 const Root = styled.section.attrs({
@@ -55,25 +55,61 @@ const Card = styled.article`
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacing(4)};
   border-radius: ${({ theme }) => theme.radius};
-  background: ${({ theme }) => theme.colors.bg};
+  background: ${({ theme }) => theme.colors.card};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  text-align: center;
   box-shadow: 0 18px 35px rgba(0, 0, 0, 0.25);
-  display: grid;
-  gap: ${({ theme }) => theme.spacing(2)};
+  display: flex;
+  flex-direction: column;
+  min-height: 450px; // Altura mínima para consistência
 `;
 const SlideTitle = styled.h3`
   margin: 0;
   font-size: 1.4rem;
   color: ${({ theme }) => theme.colors.text};
+  text-align: center;
 `;
 const SlideStack = styled.p`
   margin: 0;
   font-size: 0.95rem;
   color: ${({ theme }) => hexToRgba(theme.colors.text, 0.6)};
+  min-height: 40px; // Garante altura mínima para consistência
 `;
+
+const SlideDescription = styled.p`
+  margin: ${({ theme }) => theme.spacing(2)} 0;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 1rem;
+  line-height: 1.6;
+  flex-grow: 1; // Ocupa o espaço disponível
+`;
+
+const TagsContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing(1)};
+  justify-content: center;
+  margin-top: ${({ theme }) => theme.spacing(2)};
+`;
+
+const Tag = styled.span`
+  background-color: ${({ theme }) =>
+    theme.colors.accent}20; // Fundo com opacidade
+  color: ${({ theme }) => theme.colors.accent};
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+`;
+
+const LinksContainer = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing(2)};
+  justify-content: center;
+  margin-top: auto; // Empurra para o final do card
+  padding-top: ${({ theme }) => theme.spacing(2)};
+`;
+
 const SlideLink = styled.a`
-  justify-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -84,11 +120,20 @@ const SlideLink = styled.a`
   font-weight: 600;
   text-decoration: none;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid transparent;
+
+  &.secondary {
+    background: transparent;
+    color: ${({ theme }) => theme.colors.accent};
+    border-color: ${({ theme }) => theme.colors.accent};
+  }
+
   &:hover {
     transform: translateY(-1px);
     box-shadow: 0 12px 24px
       ${({ theme }) => hexToRgba(theme.colors.accent, 0.3)};
   }
+
   &:focus-visible {
     outline: 2px solid ${({ theme }) => theme.colors.accent};
     outline-offset: 3px;
@@ -142,7 +187,7 @@ const Dot = styled.button<{ $active: boolean }>`
 
 // ====== componente ======
 export default function ProjectsSection({ projects }: Props) {
-  const items = useMemo<ProjectPreview[]>(() => projects ?? [], [projects]);
+  const items = useMemo<Project[]>(() => projects ?? [], [projects]);
   const [selected, setSelected] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: "start", skipSnaps: false },
@@ -197,17 +242,51 @@ export default function ProjectsSection({ projects }: Props) {
             aria-live="polite"
           >
             <ContainerTrack>
-              {items.map(({ title, stack, href }, i) => (
+              {items.map((project) => (
                 <Slide
-                  key={title}
+                  key={project.id}
                   role="group"
                   aria-roledescription="slide"
-                  aria-label={`${i + 1} de ${items.length}`}
+                  aria-label={`${items.indexOf(project) + 1} de ${
+                    items.length
+                  }`}
                 >
                   <Card>
-                    <SlideTitle>{title}</SlideTitle>
-                    <SlideStack>{stack}</SlideStack>
-                    <SlideLink href={href}>Ver no GitHub</SlideLink>
+                    <SlideTitle>{project.title}</SlideTitle>
+
+                    <SlideDescription>
+                      {project.description || "Sem descrição."}
+                    </SlideDescription>
+
+                    {project.tags && project.tags.length > 0 && (
+                      <TagsContainer>
+                        {project.tags.map((tag) => (
+                          <Tag key={tag}>{tag}</Tag>
+                        ))}
+                      </TagsContainer>
+                    )}
+
+                    <LinksContainer>
+                      {project.repoUrl && (
+                        <SlideLink
+                          href={project.repoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="secondary"
+                        >
+                          Repositório
+                        </SlideLink>
+                      )}
+                      {project.liveUrl && (
+                        <SlideLink
+                          href={project.liveUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Ver Online
+                        </SlideLink>
+                      )}
+                    </LinksContainer>
                   </Card>
                 </Slide>
               ))}

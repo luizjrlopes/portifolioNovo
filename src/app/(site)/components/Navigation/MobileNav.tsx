@@ -1,4 +1,4 @@
-import type { MouseEvent, RefObject } from "react";
+import type { MouseEvent, ReactNode, RefObject } from "react";
 import type { NavLink } from "../../types/navigation";
 import {
   Backdrop,
@@ -21,9 +21,9 @@ type MobileNavProps = {
   onClose: () => void;
   onNavigate: (event: MouseEvent<HTMLAnchorElement>, link: NavLink) => void;
   drawerId: string;
-  toggleRef: RefObject<HTMLButtonElement>;
-  drawerRef: RefObject<HTMLDivElement>;
-  cta?: React.ReactNode;
+  toggleRef: RefObject<HTMLButtonElement | null>;
+  drawerRef: RefObject<HTMLDivElement | null>;
+  cta?: ReactNode;
 };
 
 export function MobileNav({
@@ -87,3 +87,5 @@ export function MobileNav({
     </>
   );
 }
+
+

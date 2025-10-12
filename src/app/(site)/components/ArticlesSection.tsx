@@ -1,13 +1,13 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
 import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { FileText, X, ExternalLink } from "lucide-react";
+import { FileText, ExternalLink } from "lucide-react";
 import { hexToRgba } from "@/utils/color";
 import type { ArticleSummary } from "../types";
-
+import Modal from "react-modal";
 /**
  * Espera que ArticleSummary tenha pelo menos:
  * - title: string
@@ -145,16 +145,65 @@ const Thumb = styled.div<{ $src?: string }>`
 
 const Meta = styled.div`
   min-width: 0;
-  h3 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #eaeaea;
-  }
-  p {
-    margin: 4px 0 0 0;
-    font-size: 0.9rem;
-    color: ${({ theme }) => hexToRgba(theme.colors.text, 0.65)};
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const CardTitle = styled.h3`
+  margin: 0;
+  font-size: 1.1rem;
+  color: ${({ theme }) => theme.colors.text};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  min-height: 2.4em; // Garante espaço para 2 linhas
+`;
+
+const CardSummary = styled.p`
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+`;
+
+const CardFooter = styled.footer`
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.colors.textSecondary};
+`;
+
+const DateDisplay = styled.time`
+  font-weight: 500;
+`;
+
+const OpenButton = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: ${({ theme }) => theme.colors.accent}20;
+  color: ${({ theme }) => theme.colors.accent};
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.accent}30;
   }
 `;
 
@@ -196,99 +245,21 @@ const Next = styled(NavButton)`
   right: 10px;
 `;
 
-/* ========== Modal PDF ========== */
-const ModalBackdrop = styled.div`
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: grid;
-  place-items: center;
-  z-index: 60;
-  backdrop-filter: blur(2px);
-`;
-
-const ModalBody = styled.div`
-  width: min(1100px, 92vw);
-  height: min(85vh, 900px);
-  background: #0b0e14;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
-`;
-
-const ModalTop = styled.div`
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 48px;
-  background: rgba(15, 17, 26, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-`;
-
-const ModalTitle = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-  strong {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 60vw;
-  }
-  a {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: #a8f5ff;
-    text-decoration: none;
-    font-size: 0.9rem;
-  }
-`;
-
-const CloseBtn = styled.button`
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.06);
-  color: #eaeaea;
-  border-radius: 10px;
-  width: 36px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-`;
-
-const ModalContent = styled.div`
-  position: absolute;
-  inset: 48px 0 0 0;
-  background: #0b0e14;
-  iframe,
-  object {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      #0b0e14,
-      #0b0e14 10px,
-      #0d1117 10px,
-      #0d1117 20px
-    );
-  }
-`;
-
 function groupByCategory(list: ArticleSummary[]) {
   const groups = new Map<string, ArticleSummary[]>();
-  for (const a of list) {
-    const cat = (a.category || "Todos") as string;
-    if (!groups.has(cat)) groups.set(cat, []);
-    groups.get(cat)!.push(a);
+
+  if (list.length) {
+    groups.set("Todos", [...list]);
   }
+
+  for (const article of list) {
+    const category = article.category?.trim() || "Outros";
+    if (!groups.has(category)) {
+      groups.set(category, []);
+    }
+    groups.get(category)!.push(article);
+  }
+
   return groups;
 }
 
@@ -299,7 +270,18 @@ export default function ArticlesSection({
   const groups = useMemo(() => groupByCategory(articles), [articles]);
   const tabs = useMemo(() => Array.from(groups.keys()), [groups]);
 
-  const [active, setActive] = useState<string>(tabs[0] ?? "Todos");
+  const [active, setActive] = useState<string>("Todos");
+
+  useEffect(() => {
+    if (!tabs.length) {
+      setActive("Todos");
+      return;
+    }
+
+    if (!tabs.includes(active)) {
+      setActive(tabs[0]);
+    }
+  }, [tabs, active]);
   const items = useMemo(() => groups.get(active) ?? [], [groups, active]);
 
   const [selected, setSelected] = useState(0);
@@ -307,6 +289,44 @@ export default function ArticlesSection({
     { loop: true, align: "start", skipSnaps: false },
     [Autoplay({ delay: 5000, stopOnInteraction: false })]
   );
+
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+  const [selectedPdf, setSelectedPdf] = useState<{
+    title: string;
+    url: string;
+  } | null>(null);
+
+  const openPdfModal = (title: string, url: string) => {
+    setSelectedPdf({ title, url });
+    setIsPdfModalOpen(true);
+  };
+
+  const closePdfModal = () => {
+    setIsPdfModalOpen(false);
+    setSelectedPdf(null);
+  };
+
+  const customStyles = {
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "clamp(360px, 80vw, 1100px)",
+      height: "85vh",
+      background: "#0b0e14",
+      border: "1px solid rgba(255, 255, 255, 0.08)",
+      borderRadius: "14px",
+      padding: "0",
+      overflow: "hidden",
+    },
+    overlay: {
+      backgroundColor: "rgba(10, 10, 10, 0.75)",
+      zIndex: 1000,
+    },
+  };
 
   const onSelect = useCallback(
     (api: any) => setSelected(api.selectedScrollSnap()),
@@ -330,18 +350,6 @@ export default function ArticlesSection({
     (i: number) => emblaApi && emblaApi.scrollTo(i),
     [emblaApi]
   );
-
-  // Modal
-  const [openPdf, setOpenPdf] = useState<{ title: string; url: string } | null>(
-    null
-  );
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenPdf(null);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
 
   if (!articles?.length) return null;
 
@@ -386,34 +394,61 @@ export default function ArticlesSection({
                 }}
               >
                 <Track>
-                  {items.map((a, i) => {
-                    const title = (a as any).title as string;
-                    const pdfUrl = (a as any).pdfUrl as string;
-                    const cover = (a as any).cover as string | undefined;
-                    const desc =
-                      ((a as any).description as string | undefined) ?? "";
-                    const date = ((a as any).date as string | undefined) ?? "";
+                  {items.map((article, i) => {
+                    const cover = article.cover;
+                    const pdfUrl = article.pdfUrl;
+                    const resolvedDescription =
+                      article.description ?? article.summary ?? "";
+                    const resolvedDateISO = article.date ?? article.createdAt;
+                    const parsedDate = resolvedDateISO
+                      ? new Date(resolvedDateISO)
+                      : null;
+                    const safeDateLabel =
+                      parsedDate && !Number.isNaN(parsedDate.getTime())
+                        ? parsedDate.toLocaleDateString("pt-BR", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : "Data não disponível";
 
                     return (
                       <Slide
-                        key={`${title}-${i}`}
+                        key={`${article.id}-${i}`}
                         role="group"
                         aria-roledescription="slide"
                         aria-label={`${i + 1} de ${items.length}`}
                       >
                         <Card
-                          onClick={() => setOpenPdf({ title, url: pdfUrl })}
+                          onClick={() =>
+                            pdfUrl && openPdfModal(article.title, pdfUrl)
+                          }
                           title="Abrir PDF"
                         >
                           <Thumb $src={cover}>
                             {!cover && <FileText size={28} aria-hidden />}
                           </Thumb>
                           <Meta>
-                            <h3>{title}</h3>
-                            <p>
-                              {date ? `${date}${desc ? " • " : ""}` : ""}
-                              {desc}
-                            </p>
+                            <CardContent>
+                              <CardTitle>{article.title}</CardTitle>
+                              <CardSummary>{resolvedDescription}</CardSummary>
+                              <CardFooter>
+                                <DateDisplay dateTime={resolvedDateISO ?? ""}>
+                                  {safeDateLabel}
+                                </DateDisplay>
+                                {pdfUrl && (
+                                  <OpenButton
+                                    href={pdfUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <FileText size={14} />
+                                    Abrir
+                                  </OpenButton>
+                                )}
+                              </CardFooter>
+                            </CardContent>
                           </Meta>
                         </Card>
                       </Slide>
@@ -438,10 +473,10 @@ export default function ArticlesSection({
               <Dots>
                 {items.map((a, i) => (
                   <Dot
-                    key={`${(a as any).title}-${i}`}
+                    key={`${a.id}-${i}`}
                     $active={i === selected}
                     onClick={() => to(i)}
-                    aria-label={`Ir para ${(a as any).title}`}
+                    aria-label={`Ir para ${a.title}`}
                   />
                 ))}
               </Dots>
@@ -449,36 +484,83 @@ export default function ArticlesSection({
           </>
         )}
       </Container>
-
-      {/* Modal PDF */}
-      {openPdf && (
-        <ModalBackdrop
-          onClick={() => setOpenPdf(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`PDF: ${openPdf.title}`}
+      {selectedPdf && (
+        <Modal
+          isOpen={isPdfModalOpen}
+          onRequestClose={closePdfModal}
+          contentLabel={`PDF: ${selectedPdf.title}`}
+          style={customStyles}
         >
-          <ModalBody onClick={(e) => e.stopPropagation()}>
-            <ModalTop>
-              <ModalTitle>
-                <FileText size={18} />
-                <strong>{openPdf.title}</strong>
-                <a href={openPdf.url} target="_blank" rel="noreferrer">
-                  <ExternalLink size={16} /> abrir em nova aba
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+            }}
+          >
+            <header
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "8px 16px",
+                background: "rgba(15, 17, 26, 0.95)",
+                borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
+                flexShrink: 0,
+              }}
+            >
+              <h3
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  margin: 0,
+                  color: "#eaeaea",
+                }}
+              >
+                <FileText size={16} /> {selectedPdf.title}
+              </h3>
+              <button
+                onClick={closePdfModal}
+                style={{
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  background: "rgba(255, 255, 255, 0.06)",
+                  color: "#eaeaea",
+                  borderRadius: "10px",
+                  width: "36px",
+                  height: "32px",
+                  display: "grid",
+                  placeItems: "center",
+                  cursor: "pointer",
+                }}
+              >
+                X
+              </button>
+            </header>
+            <div style={{ flex: 1, position: "relative" }}>
+              <iframe
+                src={selectedPdf.url}
+                title={selectedPdf.title}
+                style={{ width: "100%", height: "100%", border: 0 }}
+              />
+              <div style={{ position: "absolute", right: 16, bottom: 12 }}>
+                <a
+                  href={selectedPdf.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{
+                    color: "#a8f5ff",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                  }}
+                >
+                  <ExternalLink size={14} /> abrir em nova aba
                 </a>
-              </ModalTitle>
-              <CloseBtn onClick={() => setOpenPdf(null)} aria-label="Fechar">
-                <X size={16} />
-              </CloseBtn>
-            </ModalTop>
-            <ModalContent>
-              {/* Tentativa embutida; alguns hosts bloqueiam embutir por headers. */}
-              <object data={openPdf.url} type="application/pdf">
-                <iframe src={openPdf.url} title={openPdf.title} />
-              </object>
-            </ModalContent>
-          </ModalBody>
-        </ModalBackdrop>
+              </div>
+            </div>
+          </div>
+        </Modal>
       )}
     </Section>
   );

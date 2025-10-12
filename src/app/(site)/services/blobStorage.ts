@@ -6,11 +6,15 @@ const PAGE_SIZE = 6;
 function mapArticle(item: ArticleItem): ArticleSummary {
   return {
     id: item.id,
-    slug: item.id,
     title: item.title,
-    description: item.summary,
-    heroImage: item.pdfUrl,
-    publishedAt: item.createdAt,
+    slug: item.id,
+    summary: item.summary ?? "",
+    description: item.summary ?? "",
+    pdfUrl: item.pdfUrl ?? "",
+    createdAt: item.createdAt ?? new Date().toISOString(),
+    date: item.createdAt ?? "",
+    cover: item.pdfPath ?? "",
+    category: item.tags?.[0],
     tags: item.tags,
   };
 }

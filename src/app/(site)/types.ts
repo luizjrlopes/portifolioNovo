@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { StaticImageData } from "next/image";
 export type {
   NavLink,
   NavigationProps,
@@ -76,11 +77,22 @@ export type CertificateTab = {
 export type CertificateCategoryItem = {
   title: string;
   issued: string;
-  logo: string;
+  // aceita path público (string) ou StaticImageData quando importado via next/image
+  logo: string | StaticImageData;
   alt: string;
+  description?: string;
 };
 
 export type CertificateCategories = Record<string, CertificateCategoryItem[]>;
+
+export type Certificate = {
+  title: string;
+  issued: string;
+  logo: StaticImageData | string;
+  alt: string;
+  description?: string;
+  category: string;
+};
 
 export type ContactOption = {
   label: string;
@@ -88,11 +100,35 @@ export type ContactOption = {
   display: string;
 };
 
-export type ArticleSummary = {
-  title: string;
+export type Competency = {
   category: string;
-  date: string;
-  description: string;
-  pdfUrl: string;
-  cover: string;
+  subCategory: string;
+  title: string;
+  items: string[];
+  chips: string[];
+};
+
+export type ArticleSummary = {
+  id: string;
+  title: string;
+  summary?: string;
+  category?: string;
+  pdfUrl?: string;
+  createdAt: string; // ou Date, dependendo da sua preferência
+  tags?: string[];
+  slug?: string;
+  description?: string;
+  date?: string;
+  cover?: string;
+};
+
+export type Project = {
+  id: string;
+  title: string;
+  description?: string;
+  repoUrl?: string;
+  liveUrl?: string;
+  imagePath?: string;
+  imageUrl?: string;
+  tags?: string[];
 };

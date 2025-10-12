@@ -45,16 +45,6 @@ export const Inner = styled.div`
   gap: 16px;
 `;
 
-export const Brand = styled.a`
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-  text-decoration: none;
-  letter-spacing: 0.02em;
-
-  &:focus-visible {
-    ${focusRing}
-  }
-`;
 
 export const Actions = styled.div`
   display: flex;

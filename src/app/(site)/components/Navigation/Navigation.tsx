@@ -6,7 +6,7 @@ import type { NavigationProps, NavLink } from "../../types/navigation";
 import { FEATURES } from "../../config/features";
 import { DesktopNav } from "./DesktopNav";
 import { MobileNav } from "./MobileNav";
-import { Actions, Brand, Header, HeaderCta, Inner } from "./styles";
+import { Actions, Header, HeaderCta, Inner } from "./styles";
 
 const DRAWER_ID = "nav-drawer";
 const SCROLL_THRESHOLD = 20;
@@ -380,3 +380,4 @@ export default function Navigation({
     </Header>
   );
 }
+
