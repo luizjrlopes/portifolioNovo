@@ -2,18 +2,22 @@ import path from "node:path";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import mongoose from "mongoose";
-import { config as loadEnv } from "dotenv";
 import { dbConnect } from "@/lib/db";
 import ArticleModel from "@/models/Article";
 import CertificateModel from "@/models/Certificate";
 
-loadEnv({ path: path.resolve(process.cwd(), ".env.local") });
+// Next.js carrega automaticamente .env.local, nÃ£o precisamos do dotenv
 
 const LEGACY_ROOT = process.env.LEGACY_PORTFOLIO_PATH
   ? path.resolve(process.env.LEGACY_PORTFOLIO_PATH)
   : path.resolve(process.cwd(), "..", "portifolioNovo");
 
-const ARTICLES_INDEX_PATH = path.resolve(LEGACY_ROOT, "public", "mock", "articles_index.json");
+const ARTICLES_INDEX_PATH = path.resolve(
+  LEGACY_ROOT,
+  "public",
+  "mock",
+  "articles_index.json"
+);
 const ARTICLES_DIR = path.resolve(LEGACY_ROOT, "public", "mock", "articles");
 
 type LegacyArticleIndex = {
@@ -44,7 +48,7 @@ function normalizeAssetPath(input?: string | null) {
 
 async function seedArticles() {
   if (!existsSync(ARTICLES_INDEX_PATH)) {
-    console.warn(`Arquivo não encontrado: ${ARTICLES_INDEX_PATH}`);
+    console.warn(`Arquivo nï¿½o encontrado: ${ARTICLES_INDEX_PATH}`);
     return;
   }
 
@@ -60,7 +64,9 @@ async function seedArticles() {
       fullArticle = JSON.parse(articleRaw) as LegacyArticle;
     }
 
-    const createdAt = fullArticle.publishedAt ? new Date(fullArticle.publishedAt) : undefined;
+    const createdAt = fullArticle.publishedAt
+      ? new Date(fullArticle.publishedAt)
+      : undefined;
 
     await ArticleModel.updateOne(
       { id: fullArticle.slug },
@@ -89,7 +95,8 @@ async function seedCertificates() {
       title: "Azure Fundamentals",
       org: "Microsoft",
       issueDate: "2024-07-10",
-      verifyUrl: "https://learn.microsoft.com/credentials/certifications/azure-fundamentals/",
+      verifyUrl:
+        "https://learn.microsoft.com/credentials/certifications/azure-fundamentals/",
       imagePath: "certificates/azure-fundamentals.png",
       tags: ["Azure", "Cloud"],
     },
@@ -98,7 +105,8 @@ async function seedCertificates() {
       title: "AWS Certified Cloud Practitioner",
       org: "Amazon Web Services",
       issueDate: "2023-11-02",
-      verifyUrl: "https://aws.amazon.com/certification/certified-cloud-practitioner/",
+      verifyUrl:
+        "https://aws.amazon.com/certification/certified-cloud-practitioner/",
       imagePath: "certificates/aws-cloud-practitioner.png",
       tags: ["AWS", "Cloud"],
     },
@@ -113,10 +121,14 @@ async function seedCertificates() {
   ];
 
   for (const certificate of certificates) {
-    await CertificateModel.updateOne({ id: certificate.id }, { $set: certificate }, { upsert: true });
+    await CertificateModel.updateOne(
+      { id: certificate.id },
+      { $set: certificate },
+      { upsert: true }
+    );
   }
 
-  console.info(`Seed de certificados concluído (${certificates.length}).`);
+  console.info(`Seed de certificados concluï¿½do (${certificates.length}).`);
 }
 
 async function main() {
