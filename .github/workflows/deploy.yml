@@ -1,9 +1,7 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+  # Desabilitado por padrão; use manual se necessário
   workflow_dispatch:
 
 # Define permissões necessárias para o GITHUB_TOKEN
