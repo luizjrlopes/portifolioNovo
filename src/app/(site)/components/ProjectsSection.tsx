@@ -5,7 +5,7 @@ import { hexToRgba } from "@/utils/color";
 import type { Project } from "../types";
 
 type Props = {
-  projects: Project[];
+  projects?: Project[];
   title?: string;
   description?: string;
 };
@@ -75,11 +75,6 @@ const CardTitle = styled.h3`
   margin: 0;
   font-size: 1.35rem;
   color: ${({ theme }) => theme.colors.text};
-`;
-
-const Stack = styled.span`
-  font-size: 0.95rem;
-  color: ${({ theme }) => hexToRgba(theme.colors.textSecondary, 0.85)};
 `;
 
 const Description = styled.p`
@@ -156,7 +151,11 @@ export default function ProjectsSection({
   title = "Projetos",
   description = "Portfólio pessoal com estudos, desafios e experiências reais.",
 }: Props) {
-  if (!projects?.length) {
+  if (projects === undefined) {
+    return null;
+  }
+
+  if (!projects.length) {
     return (
       <Section>
         <Container>
@@ -183,7 +182,6 @@ export default function ProjectsSection({
             <Card key={project.id ?? project.title}>
               <CardHeader>
                 <CardTitle>{project.title}</CardTitle>
-                {project.stack && <Stack>{project.stack}</Stack>}
               </CardHeader>
 
               <Description>

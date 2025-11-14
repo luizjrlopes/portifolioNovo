@@ -15,7 +15,10 @@ type Props = {
   title?: string;
 };
 
-const Section = styled.section`
+const Section = styled.section.attrs({
+  id: "certificates",
+  tabIndex: -1,
+})`
   padding: 72px 0;
   background: #0f111a;
   color: #eaeaea;

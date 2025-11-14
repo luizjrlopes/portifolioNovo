@@ -1,12 +1,24 @@
 import { articles as mockArticles } from "@/app/(site)/mock/articles";
 import type { ArticleSummary } from "@/app/(site)/types";
 
-// A URL base da sua aplicação. Adapte se necessário.
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+// Detecta a porta atual durante o runtime
+const getBaseUrl = () => {
+  if (typeof window !== "undefined") {
+    return `${window.location.protocol}//${window.location.host}`;
+  }
+  return process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+};
 
 export async function getArticles(): Promise<ArticleSummary[]> {
+  // Retorna dados mock imediatamente para desenvolvimento
+  if (process.env.NODE_ENV === "development") {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(mockArticles), 300);
+    });
+  }
   try {
-    const res = await fetch(`${BASE_URL}/api/articles`, {
+    const baseUrl = getBaseUrl();
+    const res = await fetch(`${baseUrl}/api/articles`, {
       next: { revalidate: 3600 },
     });
 

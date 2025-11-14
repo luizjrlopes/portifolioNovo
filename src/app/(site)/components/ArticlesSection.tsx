@@ -24,7 +24,10 @@ type Props = {
   title?: string;
 };
 
-const Section = styled.section`
+const Section = styled.section.attrs({
+  id: "articles",
+  tabIndex: -1,
+})`
   padding: 84px 0;
   background: ${({ theme }) => hexToRgba(theme.colors.bg, 0.98)};
   color: ${({ theme }) => theme.colors.text};
@@ -289,15 +292,21 @@ export default function ArticlesSection({
       return;
     }
 
+    // Só atualiza se a aba ativa não estiver mais disponível
     if (!tabs.includes(active)) {
       setActive(tabs[0]);
     }
-  }, [tabs, active]);
+  }, [tabs, active]); // Incluindo 'active' nas dependências
   const items = useMemo(() => groups.get(active) ?? [], [groups, active]);
 
   const [selected, setSelected] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: true, align: "start", skipSnaps: false },
+    {
+      loop: true,
+      align: "start",
+      skipSnaps: false,
+      containScroll: "trimSnaps", // Evita snaps vazios
+    },
     [Autoplay({ delay: 5000, stopOnInteraction: false })]
   );
 
@@ -307,37 +316,41 @@ export default function ArticlesSection({
     url: string;
   } | null>(null);
 
-  const openPdfModal = (title: string, url: string) => {
+  // Memoiza as funções do modal para evitar re-renders
+  const openPdfModal = useCallback((title: string, url: string) => {
     setSelectedPdf({ title, url });
     setIsPdfModalOpen(true);
-  };
+  }, []);
 
-  const closePdfModal = () => {
+  const closePdfModal = useCallback(() => {
     setIsPdfModalOpen(false);
     setSelectedPdf(null);
-  };
+  }, []);
 
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "clamp(360px, 80vw, 1100px)",
-      height: "85vh",
-      background: "#0b0e14",
-      border: "1px solid rgba(255, 255, 255, 0.08)",
-      borderRadius: "14px",
-      padding: "0",
-      overflow: "hidden",
-    },
-    overlay: {
-      backgroundColor: "rgba(10, 10, 10, 0.75)",
-      zIndex: 1000,
-    },
-  };
+  const customStyles = useMemo(
+    () => ({
+      content: {
+        top: "50%",
+        left: "50%",
+        right: "auto",
+        bottom: "auto",
+        marginRight: "-50%",
+        transform: "translate(-50%, -50%)",
+        width: "clamp(360px, 80vw, 1100px)",
+        height: "85vh",
+        background: "#0b0e14",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        borderRadius: "14px",
+        padding: "0",
+        overflow: "hidden",
+      },
+      overlay: {
+        backgroundColor: "rgba(10, 10, 10, 0.75)",
+        zIndex: 1000,
+      },
+    }),
+    []
+  );
 
   const onSelect = useCallback(
     (api: any) => setSelected(api.selectedScrollSnap()),

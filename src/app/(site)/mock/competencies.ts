@@ -1,6 +1,46 @@
 ﻿import type { Competency } from "../types";
 
 export const competencies: Competency[] = [
+  // Inteligência Artificial & Machine Learning
+  {
+    category: "IA & Machine Learning",
+    subCategory: "Generative AI",
+    title: "Large Language Models (LLMs)",
+    items: [
+      "Desenvolvimento com OpenAI API (GPT-3.5, GPT-4)",
+      "Prompt Engineering e Chain of Thought",
+      "Retrieval Augmented Generation (RAG)",
+      "Fine-tuning e customização de modelos",
+      "Embedding e similarity search",
+    ],
+    chips: ["OpenAI", "Langchain", "Vector DB", "RAG", "Prompt Engineering"],
+  },
+  {
+    category: "IA & Machine Learning",
+    subCategory: "Generative AI",
+    title: "AI Integration & Development",
+    items: [
+      "Integração de LLMs em aplicações web",
+      "Desenvolvimento de chatbots inteligentes",
+      "Processamento de linguagem natural (NLP)",
+      "Análise de sentimentos e classificação de texto",
+      "Automação de processos com IA generativa",
+    ],
+    chips: ["Python", "FastAPI", "Streamlit", "Hugging Face", "Azure OpenAI"],
+  },
+  {
+    category: "IA & Machine Learning",
+    subCategory: "Data Science",
+    title: "Machine Learning Fundamentals",
+    items: [
+      "Algoritmos de classificação e regressão",
+      "Análise exploratória de dados (EDA)",
+      "Feature engineering e seleção de variáveis",
+      "Validação de modelos e métricas de performance",
+      "Deploy de modelos ML em produção",
+    ],
+    chips: ["Scikit-learn", "Pandas", "NumPy", "Matplotlib", "MLOps"],
+  },
   // Cloud
   {
     category: "Cloud",
@@ -42,14 +82,15 @@ export const competencies: Competency[] = [
   {
     category: "Programação",
     subCategory: "Python",
-    title: "Python Fundamentals",
+    title: "Python para Data Science e IA",
     items: [
-      "Python Fundamentals",
-      "Data Structures with Python",
-      "Object-Oriented Programming with Python",
-      "Decorators, Iterators, and Data and File Manipulation in Python",
+      "Python Fundamentals e estruturas de dados avançadas",
+      "Programação orientada a objetos (OOP)",
+      "Manipulação de dados com Pandas e NumPy",
+      "Desenvolvimento de APIs com FastAPI e Flask",
+      "Integração com serviços de IA e ML",
     ],
-    chips: [],
+    chips: ["Pandas", "NumPy", "FastAPI", "Jupyter", "OpenAI API"],
   },
   // Soft Skills
   {

@@ -7,7 +7,10 @@ import Modal from "react-modal";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    Modal.setAppElement("body");
+    // Garante que o Modal seja configurado apenas no cliente
+    if (typeof window !== "undefined") {
+      Modal.setAppElement("body");
+    }
   }, []);
 
   return (

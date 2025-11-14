@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import type {
   Competency,
@@ -22,10 +22,15 @@ import {
   Layers,
   GitBranch,
   MonitorSmartphone,
+  Brain,
+  Zap,
 } from "lucide-react";
 
 /* =============== Styles (abas + cards) =============== */
-const Wrapper = styled.section`
+const Wrapper = styled.section.attrs({
+  id: "competencies",
+  tabIndex: -1,
+})`
   padding: 3rem 1rem;
   color: #eaeaea;
   background: #0f111a;
@@ -187,16 +192,35 @@ const Chip = styled.span`
 const tabIcon = (key: string) => {
   if (key === "cloud") return <Cloud size={16} />;
   if (key === "devops") return <Cog size={16} />;
-  if (key === "prog") return <Code2 size={16} />;
-  if (key === "ia") return <Cpu size={16} />;
+  if (key === "programação") return <Code2 size={16} />;
+  if (key === "ia & machine learning") return <Brain size={16} />;
+  if (key === "soft skills") return <Zap size={16} />;
   return <BadgeHelp size={16} />;
 };
 
 const headingIconByTitle = (t: string) => {
   const k = t.toLowerCase();
   if (k.includes("cloud")) return <Cloud size={22} />;
-  if (k.includes("full") || k.includes("stack") || k.includes("desenv"))
+  if (
+    k.includes("llm") ||
+    k.includes("ai") ||
+    k.includes("machine learning") ||
+    k.includes("generative")
+  )
+    return <Brain size={22} />;
+  if (
+    k.includes("full") ||
+    k.includes("stack") ||
+    k.includes("desenv") ||
+    k.includes("python")
+  )
     return <Code2 size={22} />;
+  if (
+    k.includes("soft") ||
+    k.includes("comunicação") ||
+    k.includes("colaboração")
+  )
+    return <Zap size={22} />;
   return <BadgeHelp size={22} />;
 };
 
@@ -240,10 +264,7 @@ function groupBySubCategory(list: Competency[]) {
 }
 
 /* =============== Component =============== */
-export default function CompetenciesTabbedSection({
-  competencies,
-  title = "Competências",
-}: Props) {
+function CompetenciesSection({ competencies, title = "Competências" }: Props) {
   const categories = useMemo(
     () => groupByCategory(competencies),
     [competencies]
@@ -344,3 +365,5 @@ export default function CompetenciesTabbedSection({
     </Wrapper>
   );
 }
+
+export default React.memo(CompetenciesSection);
