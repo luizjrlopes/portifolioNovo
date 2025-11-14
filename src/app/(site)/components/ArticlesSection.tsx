@@ -564,13 +564,13 @@ export default function ArticlesSection({
             </header>
             <div style={{ flex: 1, position: "relative" }}>
               <iframe
-                src={withBasePath(selectedPdf.url)}
+                src={selectedPdf.url}
                 title={selectedPdf.title}
                 style={{ width: "100%", height: "100%", border: 0 }}
               />
               <div style={{ position: "absolute", right: 16, bottom: 12 }}>
                 <a
-                  href={withBasePath(selectedPdf.url)}
+                  href={selectedPdf.url}
                   target="_blank"
                   rel="noreferrer"
                   style={{
