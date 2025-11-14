@@ -172,6 +172,10 @@ npm run build:export
 2. Verifique se "Read and write permissions" está habilitado em:
    - Settings > Actions > General > Workflow permissions
 
+3. Se a página publicada mostra o conteúdo do README (texto "Getting Started" do Next), o Pages está servindo a branch em vez do artefato do Actions:
+   - Vá em Settings > Pages > Build and deployment > Source e selecione "GitHub Actions".
+   - Reexecute o workflow mais recente (Actions > Deploy to GitHub Pages > Re-run) ou faça um novo push.
+
 ### Site não carregando assets?
 
 - Verifique se `basePath` em `next.config.ts` está correto
