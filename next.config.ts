@@ -14,8 +14,8 @@ const nextConfig: NextConfig = {
   // Base path para GitHub Pages (https://username.github.io/repo-name/)
   basePath: isProd && isExport && repoName ? `/${repoName}` : "",
 
-  // Asset prefix para servir assets corretamente
-  assetPrefix: isProd && isExport && repoName ? `/${repoName}/` : "",
+  // Asset prefix para servir assets corretamente (evita // nas URLs)
+  assetPrefix: isProd && isExport && repoName ? `/${repoName}` : "",
 
   // Desabilitar otimização de imagens para export estático
   images: {
