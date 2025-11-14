@@ -79,6 +79,8 @@ jobs:
           NODE_ENV: production
           BUILD_MODE: export
           NEXT_PUBLIC_STATIC_EXPORT: "true"
+      - name: Add .nojekyll
+        run: echo "" > out/.nojekyll
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
