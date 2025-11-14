@@ -8,6 +8,10 @@ import { cdn } from "@/config/cdn";
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
+const isStaticExport =
+  process.env.BUILD_MODE === "export" ||
+  process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+
 const CertificateSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -21,6 +25,15 @@ const CertificateSchema = z.object({
 type CertificatePayload = z.infer<typeof CertificateSchema>;
 
 export async function GET() {
+  // Em export estático, retornamos estrutura vazia para evitar dependência de DB
+  if (isStaticExport) {
+    return NextResponse.json({
+      version: 1,
+      updatedAt: new Date().toISOString(),
+      items: [],
+    });
+  }
+
   await dbConnect();
 
   const docs = await CertificateModel.find().lean();

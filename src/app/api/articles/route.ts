@@ -8,6 +8,10 @@ import { cdn } from "@/config/cdn";
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
+const isStaticExport =
+  process.env.BUILD_MODE === "export" ||
+  process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+
 const ArticleSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -23,6 +27,9 @@ type ArticlePayload = z.infer<typeof ArticleSchema>;
 
 export async function GET() {
   try {
+    if (isStaticExport) {
+      return NextResponse.json({ items: [] });
+    }
     await dbConnect();
 
     const docs = await ArticleModel.find().sort({ createdAt: -1 }).lean();

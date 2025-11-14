@@ -8,6 +8,10 @@ import { cdn } from "@/config/cdn";
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
+const isStaticExport =
+  process.env.BUILD_MODE === "export" ||
+  process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+
 const ProjectSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -21,6 +25,9 @@ const ProjectSchema = z.object({
 type ProjectPayload = z.infer<typeof ProjectSchema>;
 
 export async function GET() {
+  if (isStaticExport) {
+    return NextResponse.json({ items: [] });
+  }
   await dbConnect();
 
   const docs = await ProjectModel.find().lean();

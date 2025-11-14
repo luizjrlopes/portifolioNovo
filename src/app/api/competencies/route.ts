@@ -7,6 +7,10 @@ import { z } from "zod";
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
+const isStaticExport =
+  process.env.BUILD_MODE === "export" ||
+  process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+
 const CompetencySchema = z.object({
   id: z.string(),
   category: z.string(),
@@ -18,6 +22,9 @@ const CompetencySchema = z.object({
 
 export async function GET() {
   try {
+    if (isStaticExport) {
+      return NextResponse.json({ items: [] });
+    }
     await dbConnect();
     const competencies = await CompetencyModel.find({}).lean();
 
