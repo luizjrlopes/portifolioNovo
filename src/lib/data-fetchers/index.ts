@@ -10,6 +10,11 @@ const getBaseUrl = () => {
   return process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 };
 
+// Verifica se está em modo export (estático para GitHub Pages)
+const isStaticExport =
+  process.env.BUILD_MODE === "export" ||
+  process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+
 interface FetchDataOptions<T> {
   endpoint: string;
   mockData: T[];
@@ -30,8 +35,8 @@ export async function fetchData<T>({
   revalidate = 3600,
   transform,
 }: FetchDataOptions<T>): Promise<T[]> {
-  // Retorna dados mock imediatamente para desenvolvimento
-  if (process.env.NODE_ENV === "development") {
+  // Retorna dados mock para desenvolvimento ou export estático
+  if (process.env.NODE_ENV === "development" || isStaticExport) {
     return new Promise((resolve) => {
       setTimeout(() => resolve(mockData), devDelay);
     });

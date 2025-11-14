@@ -4,6 +4,10 @@ import CertificateModel from "@/models/Certificate";
 import { z } from "zod";
 import { cdn } from "@/config/cdn";
 
+// Necessário para export estático
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
 const CertificateSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -30,7 +34,9 @@ export async function GET() {
     tags: doc.tags,
   }));
 
-  const payload = z.array(CertificateSchema).parse(sanitized) satisfies CertificatePayload[];
+  const payload = z
+    .array(CertificateSchema)
+    .parse(sanitized) satisfies CertificatePayload[];
 
   const items = payload.map((item) => ({
     ...item,

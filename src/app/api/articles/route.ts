@@ -4,6 +4,10 @@ import ArticleModel from "@/models/Article";
 import { z } from "zod";
 import { cdn } from "@/config/cdn";
 
+// Necessário para export estático
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
 const ArticleSchema = z.object({
   id: z.string(),
   title: z.string(),

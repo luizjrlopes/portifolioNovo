@@ -4,6 +4,10 @@ import ProjectModel from "@/models/Project";
 import { z } from "zod";
 import { cdn } from "@/config/cdn";
 
+// Necessário para export estático
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
 const ProjectSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -30,7 +34,9 @@ export async function GET() {
     tags: doc.tags,
   }));
 
-  const payload = z.array(ProjectSchema).parse(sanitized) satisfies ProjectPayload[];
+  const payload = z
+    .array(ProjectSchema)
+    .parse(sanitized) satisfies ProjectPayload[];
 
   const items = payload.map((item) => ({
     ...item,

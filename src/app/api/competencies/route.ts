@@ -3,6 +3,10 @@ import { dbConnect } from "@/lib/db";
 import CompetencyModel from "@/models/Competency";
 import { z } from "zod";
 
+// Necessário para export estático
+export const dynamic = "force-static";
+export const revalidate = 3600;
+
 const CompetencySchema = z.object({
   id: z.string(),
   category: z.string(),
