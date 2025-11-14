@@ -8,6 +8,7 @@ import { FileText, ExternalLink } from "lucide-react";
 import { hexToRgba } from "@/utils/color";
 import type { ArticleSummary } from "../types";
 import Modal from "react-modal";
+import { withBasePath } from "@/utils/url";
 /**
  * Espera que ArticleSummary tenha pelo menos:
  * - title: string
@@ -419,8 +420,8 @@ export default function ArticlesSection({
               >
                 <Track>
                   {items.map((article, i) => {
-                    const cover = article.cover;
-                    const pdfUrl = article.pdfUrl;
+                    const cover = withBasePath(article.cover);
+                    const pdfUrl = withBasePath(article.pdfUrl);
                     const resolvedDescription =
                       article.description ?? article.summary ?? "";
                     const resolvedDateISO = article.date ?? article.createdAt;
@@ -563,13 +564,13 @@ export default function ArticlesSection({
             </header>
             <div style={{ flex: 1, position: "relative" }}>
               <iframe
-                src={selectedPdf.url}
+                src={withBasePath(selectedPdf.url)}
                 title={selectedPdf.title}
                 style={{ width: "100%", height: "100%", border: 0 }}
               />
               <div style={{ position: "absolute", right: 16, bottom: 12 }}>
                 <a
-                  href={selectedPdf.url}
+                  href={withBasePath(selectedPdf.url)}
                   target="_blank"
                   rel="noreferrer"
                   style={{

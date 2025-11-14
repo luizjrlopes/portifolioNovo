@@ -38,6 +38,11 @@ const nextConfig: NextConfig = {
 
   // Trailing slash para compatibilidade com GitHub Pages
   trailingSlash: true,
+
+  // Expõe o basePath no client para montar URLs de assets (PDFs, imagens em public/)
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isProd && isExport && repoName ? `/${repoName}` : "",
+  },
 };
 
 export default nextConfig;
