@@ -113,6 +113,7 @@ export type ArticleSummary = {
   title: string;
   summary?: string;
   category?: string;
+  url?: string; // Link externo preferencial
   pdfUrl?: string;
   createdAt: string; // ou Date, dependendo da sua preferência
   tags?: string[];

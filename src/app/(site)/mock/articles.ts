@@ -15,7 +15,7 @@ export const articles: ArticleMock[] = [
     category: "Cloud",
     summary: "Mapa mental e notas de estudo para Azure Fundamentals.",
     description: "Mapa mental e notas de estudo para Azure Fundamentals.",
-    pdfUrl: "/assets/articles/az-900-resumo.pdf",
+    url: "https://www.linkedin.com/pulse/computa%25C3%25A7%25C3%25A3o-em-nuvem-luiz-j%25C3%25BAnior-lopes/?trackingId=EkwpthByQVSg7UKp4%2B%2Bz2g%3D%3D",
     cover: "/assets/articles/covers/azure.jpg",
     createdAt: "2025-08-30T00:00:00.000Z",
     date: "2025-08-30",

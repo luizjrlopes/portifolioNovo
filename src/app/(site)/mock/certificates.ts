@@ -1,18 +1,20 @@
 import type { Certificate } from "../types";
-import MicrosoftFundamentals from "/public/assets/certificates/Microsoft_Professional_Certificate_Fundamentals.jpg";
-import AnalistaCloud from "/public/assets/certificates/Analista_Cloud.jpg";
-import BasicFrontend from "/public/assets/certificates/Basic_Frontend.jpg";
-import BootCampSinqia from "/public/assets/certificates/BootCamp_Sinqia.jpg";
-import BootcampSpringReact from "/public/assets/certificates/Bootcamp_Spring_React.jpg";
-import CertificadoCTFL from "/public/assets/certificates/Certificado_Teste-CTFL-ISTQB_BSTQB.jpg";
-import CertificadoUX from "/public/assets/certificates/Certificado_UX_Design_Rapido_e_Pratico.jpg";
-import CertificadoXD from "/public/assets/certificates/Certificado_XD_Node_Mongo_React_ReactNative.jpg";
-import CriandoRepo from "/public/assets/certificates/Criando_seu_Primeiro_Repositorio.jpg";
-import CursoHacktrack from "/public/assets/certificates/Curso_Hacktrack.jpg";
-import FormacaoEngCloud from "/public/assets/certificates/Formacao_Engenheiro_Cloud.jpg";
-import IntroducaoCSharp from "/public/assets/certificates/Introducao_ao_CSharp_e_.NET.jpg";
-import IntroGitGithub from "/public/assets/certificates/Introdução ao Git e ao GitHub-page-00001.jpg";
-import JornadaAzure from "/public/assets/certificates/Jornada_Microsoft_Azure.png";
+import MicrosoftFundamentals from "/public/assets/certificates/Cloud/Microsoft_Professional_Certificate_Fundamentals.jpg";
+import AnalistaCloud from "/public/assets/certificates/Cloud/Analista_Cloud.jpg";
+import BasicFrontend from "/public/assets/certificates/Programacao/Basic_Frontend.jpg";
+import Programmer from "/public/assets/certificates/Programacao/Programmer.png";
+import Object_Oriented_Developer from "/public/assets/certificates/Programacao/Object_Oriented_Developer.png";
+import BootCampSinqia from "/public/assets/certificates/Programacao/BootCamp_Sinqia.jpg";
+import BootcampSpringReact from "/public/assets/certificates/Programacao/Bootcamp_Spring_React.jpg";
+import CertificadoCTFL from "/public/assets/certificates/Programacao/Certificado_Teste-CTFL-ISTQB_BSTQB.jpg";
+import CertificadoUX from "/public/assets/certificates/Programacao/Certificado_UX_Design_Rapido_e_Pratico.jpg";
+import CertificadoXD from "/public/assets/certificates/Programacao/Certificado_XD_Node_Mongo_React_ReactNative.jpg";
+import CriandoRepo from "/public/assets/certificates/Programacao/Criando_seu_Primeiro_Repositorio.jpg";
+import CursoHacktrack from "/public/assets/certificates/Programacao/Curso_Hacktrack.jpg";
+
+import IntroducaoCSharp from "/public/assets/certificates/Programacao/Introducao_ao_CSharp_e_.NET.jpg";
+import IntroGitGithub from "/public/assets/certificates/Programacao/Introdução ao Git e ao GitHub-page-00001.jpg";
+import JornadaAzure from "/public/assets/certificates/Cloud/Jornada_Microsoft_Azure.png";
 
 export const certificates: Certificate[] = [
   // Cloud
@@ -25,15 +27,7 @@ export const certificates: Certificate[] = [
       "Certificado de fundamentos Microsoft Azure, cobrindo conceitos de nuvem, serviços e segurança.",
     category: "Cloud",
   },
-  {
-    title: "Formação Engenheiro Cloud",
-    issued: "Concluido em 2024",
-    logo: FormacaoEngCloud,
-    alt: "Formação Engenheiro Cloud",
-    description:
-      "Formação em práticas de engenharia de nuvem e design de soluções escaláveis.",
-    category: "Cloud",
-  },
+
   {
     title: "Analista Cloud",
     issued: "Concluido em 2023",
@@ -43,14 +37,41 @@ export const certificates: Certificate[] = [
       "Capacitação focada em operação e monitoramento de ambientes em nuvem.",
     category: "Cloud",
   },
+  {
+    title: "Jornada Microsoft Azure",
+    issued: "Concluido em 2024",
+    logo: JornadaAzure,
+    alt: "Jornada Azure",
+    description:
+      "Trilha prática explorando serviços principais do Azure: Compute, Storage, Networking, Segurança e boas práticas de arquitetura.",
+    category: "Cloud",
+  },
   // Programacao
   {
     title: "Basic Frontend",
-    issued: "Concluido em 2022",
+    issued: "Concluido em 2025",
     logo: BasicFrontend,
     alt: "Basic Frontend",
     description:
       "Curso introdutório a desenvolvimento front-end: HTML, CSS e JavaScript básicos.",
+    category: "Programacao",
+  },
+  {
+    title: "Programmer",
+    issued: "Concluido em 2025",
+    logo: Programmer,
+    alt: "Programmer",
+    description:
+      "Empreendedorismo e Criação de Novos Negócios, Lógica de Programação.",
+    category: "Programacao",
+  },
+  {
+    title: "Object-Oriented Developer",
+    issued: "Concluido em 2025",
+    logo: Object_Oriented_Developer,
+    alt: "Object_Oriented_Developer",
+    description:
+      "Design de Software, Estruturas de Dados para Sistemas Inteligentes, Programação I.",
     category: "Programacao",
   },
   {
@@ -105,4 +126,32 @@ export const certificates: Certificate[] = [
       "Um passo a passo prático para criar e publicar repositórios no GitHub.",
     category: "Programacao",
   },
+  {
+    title: "CTFL / ISTQB Foundation Level",
+    issued: "Concluido em 2024",
+    logo: CertificadoCTFL,
+    alt: "Certificado CTFL ISTQB",
+    description:
+      "Certificação Foundation Level em testes de software (ISTQB/BSTQB): técnicas de teste, gerenciamento e qualidade.",
+    category: "Programacao",
+  },
+  {
+    title: "UX Design Rápido e Prático",
+    issued: "Concluido em 2023",
+    logo: CertificadoUX,
+    alt: "Certificado UX Design",
+    description:
+      "Formação introdutória em UX: pesquisa de usuário, prototipação e princípios de usabilidade para interfaces web.",
+    category: "Programacao",
+  },
+  {
+    title: "Hacktrack (Segurança e Pentest Básico)",
+    issued: "Concluido em 2022",
+    logo: CursoHacktrack,
+    alt: "Curso Hacktrack",
+    description:
+      "Curso abordando fundamentos de segurança da informação, análise de vulnerabilidades e práticas de pentest iniciais.",
+    category: "Programacao",
+  },
+  // IA
 ];

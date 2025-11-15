@@ -421,7 +421,9 @@ export default function ArticlesSection({
                 <Track>
                   {items.map((article, i) => {
                     const cover = withBasePath(article.cover);
-                    const pdfUrl = withBasePath(article.pdfUrl);
+                    const preferredUrl = article.url
+                      ? withBasePath(article.url)
+                      : withBasePath(article.pdfUrl);
                     const resolvedDescription =
                       article.description ?? article.summary ?? "";
                     const resolvedDateISO = article.date ?? article.createdAt;
@@ -445,10 +447,20 @@ export default function ArticlesSection({
                         aria-label={`${i + 1} de ${items.length}`}
                       >
                         <Card
-                          onClick={() =>
-                            pdfUrl && openPdfModal(article.title, pdfUrl)
-                          }
-                          title="Abrir PDF"
+                          onClick={() => {
+                            if (article.url && preferredUrl) {
+                              window.open(
+                                preferredUrl,
+                                "_blank",
+                                "noopener,noreferrer"
+                              );
+                              return;
+                            }
+                            if (article.pdfUrl && preferredUrl) {
+                              openPdfModal(article.title, preferredUrl);
+                            }
+                          }}
+                          title={article.url ? "Abrir link" : "Abrir PDF"}
                         >
                           <Thumb $src={cover}>
                             {!cover && <FileText size={28} aria-hidden />}
@@ -461,9 +473,9 @@ export default function ArticlesSection({
                                 <DateDisplay dateTime={resolvedDateISO ?? ""}>
                                   {safeDateLabel}
                                 </DateDisplay>
-                                {pdfUrl && (
+                                {preferredUrl && (
                                   <OpenButton
-                                    href={pdfUrl}
+                                    href={preferredUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     onClick={(e) => e.stopPropagation()}
@@ -509,7 +521,8 @@ export default function ArticlesSection({
           </>
         )}
       </Container>
-      {selectedPdf && (
+      {/* Renderiza modal apenas quando for um PDF */}
+      {selectedPdf && !selectedPdf.url.startsWith("http") && (
         <Modal
           isOpen={isPdfModalOpen}
           onRequestClose={closePdfModal}
