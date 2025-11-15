@@ -76,7 +76,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "Bootcamp Sinqia",
-    issued: "Concluido em 2023",
+    issued: "Concluido em 2021",
     logo: BootCampSinqia,
     alt: "Bootcamp Sinqia",
     description:
@@ -85,7 +85,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "Bootcamp Spring + React",
-    issued: "Concluido em 2023",
+    issued: "Concluido em 2021",
     logo: BootcampSpringReact,
     alt: "Bootcamp Spring React",
     description: "Formação prática em backend Java (Spring) e frontend React.",
@@ -128,7 +128,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "CTFL / ISTQB Foundation Level",
-    issued: "Concluido em 2024",
+    issued: "Concluido em 2021",
     logo: CertificadoCTFL,
     alt: "Certificado CTFL ISTQB",
     description:
@@ -137,7 +137,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "UX Design Rápido e Prático",
-    issued: "Concluido em 2023",
+    issued: "Concluido em 2021",
     logo: CertificadoUX,
     alt: "Certificado UX Design",
     description:
@@ -146,7 +146,7 @@ export const certificates: Certificate[] = [
   },
   {
     title: "Hacktrack (Segurança e Pentest Básico)",
-    issued: "Concluido em 2022",
+    issued: "Concluido em 2019",
     logo: CursoHacktrack,
     alt: "Curso Hacktrack",
     description:
