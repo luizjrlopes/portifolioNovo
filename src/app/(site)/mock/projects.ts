@@ -15,7 +15,7 @@ export const projects: Project[] = [
     id: "2",
     title: "PoderosaNoParto",
     description:
-      "Microservice Shop é uma plataforma de pedidos pensada para demonstrar padrões de mensageria e automação com serviços independentes. O monorepo inclui um serviço Java para gerenciamento de pedidos, um worker Python que confirma pedidos de forma assíncrona, além de testes BDD em TypeScript. A stack padrão utiliza Docker Compose para expor HTTP, AMQP e ferramentas de observabilidade prontas para laboratório.",
+      "Aplicação web (React) e conjunto de experimentos de IA focados em apoiar pessoas gestantes durante o pré-natal com conteúdos personalizados, monitoramento de tarefas e recomendações baseadas em dados clínicos e de engajamento.",
     repoUrl: "https://github.com/luizjrlopes/PoderosaNoParto",
     // liveUrl: "https://meu-portfolio.com",
     imagePath: "project-1.jpg",
