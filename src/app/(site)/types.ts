@@ -120,7 +120,7 @@ export type ArticleSummary = {
   slug?: string;
   description?: string;
   date?: string;
-  cover?: string;
+  cover?: StaticImageData | string;
 };
 
 export type Project = {
