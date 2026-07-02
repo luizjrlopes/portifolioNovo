@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+/_portfolio_base/
 
 # debug
 npm-debug.log*

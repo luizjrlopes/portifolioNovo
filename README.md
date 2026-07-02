@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio — Luiz Junior
 
-## Getting Started
+**AI Software Engineer | Full Stack Cloud**
 
-First, run the development server:
+Portfolio pessoal deployado em: https://luizjrlopes.github.io/portifolioNovo/
+
+---
+
+## Stack
+
+- **Next.js 15** (App Router) + **TypeScript**
+- **styled-components 6** com SSR registry para App Router
+- **Embla Carousel** — carrossel de certificados
+- **Lucide React** — icones tree-shakeable
+- Deploy: **GitHub Pages** via static export
+
+---
+
+## Rodando localmente
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# → http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Build para producao
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build:export
+# Gera: ./out/ (static export com basePath /portifolioNovo)
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Atualizando conteudo
 
-To learn more about Next.js, take a look at the following resources:
+Todo o conteudo esta em `src/app/(site)/mock/`:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Arquivo | O que edita |
+|---|---|
+| `hero.ts` | Titulo, subtitulo, badge, CTA |
+| `about.ts` | Descricao profissional |
+| `projects.ts` | Projetos de portfolio |
+| `competencies.ts` | Habilidades tecnicas |
+| `articles.ts` | Artigos publicados |
+| `certificates.ts` | Certificacoes |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Commit + push em `main` dispara deploy automatico.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+GitHub Actions (`.github/workflows/nextjs.yml`):
+```
+push main → npm ci → npm run build:export → GitHub Pages
+```
+
+---
+
+## Arquitetura
+
+- **Export estatico condicional**: `BUILD_MODE=export` ativa `output: "export"` no `next.config.ts`
+- **Mock data em producao**: API routes e MongoDB existem mas sao bypassed em static export
+- **SSR styled-components**: `src/app/registry.tsx` (ServerStyleSheet) evita FOUC no primeiro render
+- Decisoes documentadas em `docs/adr/`
+
+---
+
+## Projetos destacados
+
+- [Licitacao Lab](https://github.com/luizjrlopes/licitacao-lab) — NestJS, pg_advisory_xact_lock, Redis, ADRs
+- [Microservice Shop](https://github.com/luizjrlopes/microservice-shop) — Java/Python/Node, RabbitMQ, BDD
+- [AutoFlow IA](https://github.com/luizjrlopes/autoflow-ia) — Python, Function Calling, zero dependencias
+- [Organizador de Vida](https://github.com/luizjrlopes/app_organizador) — Next.js, Claude API, PWA
