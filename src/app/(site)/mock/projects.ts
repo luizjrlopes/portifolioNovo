@@ -24,7 +24,7 @@ export const projects: Project[] = [
     title: "AutoFlow IA",
     description:
       "Agente de automação com function calling, zero dependências externas e API REST local. Classifica intenções, seleciona ferramentas e executa ações via dicionário FERRAMENTAS — mesmo padrão arquitetural de agentes LLM, implementado com Python stdlib puro. Demonstrável offline em qualquer máquina sem instalação.",
-    repoUrl: "https://github.com/luizjrlopes/autoflow-ia",
+    repoUrl: "https://github.com/luizjrlopes/AutoFlow",
     imagePath: "project-1.jpg",
     tags: ["Python", "REST API", "Agent", "Function Calling", "SQLite"],
   },
