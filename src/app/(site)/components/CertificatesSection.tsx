@@ -7,6 +7,7 @@ import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import type { Certificate } from "../types";
 import { hexToRgba } from "@/utils/color";
+import { withBasePath } from "@/utils/url";
 import { Award } from "lucide-react";
 import Modal from "react-modal";
 
@@ -329,9 +330,7 @@ export default function CertificatesSection({
                       <Card
                         onClick={() =>
                           handlePreview(
-                            typeof c.logo === "string"
-                              ? (c.logo as string)
-                              : (c.logo as any)?.src,
+                            withBasePath(c.logo),
                             c.alt,
                             c.title
                           )
@@ -339,7 +338,7 @@ export default function CertificatesSection({
                       >
                         <Logo>
                           <Image
-                            src={c.logo}
+                            src={withBasePath(c.logo) || "/placeholder.png"}
                             alt={c.alt}
                             width={52}
                             height={52}
