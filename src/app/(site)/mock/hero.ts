@@ -1,13 +1,13 @@
 // mock/hero.ts
 import type { HeroContent } from "../types/hero";
-import FotoPerfil from "@/public/assets/geral/fotoPerfil.jpg";
+import FotoPerfil from "@/public/assets/geral/fotoPerfil.png";
 // Suponha que, no server, você já tenha gerado:
 // const heroImageUrl = blobUrl("hero", "bg-portfolio-001.jpg");
 
 export const heroContent: HeroContent = {
-  title: "AI Software Engineer · Full Stack Cloud",
+  title: "AI Software Engineer",
   subtitle:
-    "Construo sistemas com LLMs, arquiteturas cloud-native e pipelines event-driven. Projetos com padrão de produção, ADRs e CI — do zero à entrega.",
+    "Agentes de IA, RAG, automação, Full Stack e Cloud — com arquitetura, testes, segurança, observabilidade e operação.",
   imageUrl: FotoPerfil.src,
   imageAlt: "Luiz Júnior — AI Software Engineer",
   primaryCta: { label: "Ver Projetos", href: "#projects" },

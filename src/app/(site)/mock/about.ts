@@ -1,15 +1,15 @@
 ﻿import type { AboutContent } from "../types";
-import FotoPerfil from "@/public/assets/geral/fotoPerfil.jpg";
+import FotoPerfil from "@/public/assets/geral/fotoPerfil.png";
 
 export const aboutContent: AboutContent = {
   imageUrl: FotoPerfil.src,
   description: `
-Sou AI Software Engineer com foco em sistemas distribuídos, LLMs e arquiteturas cloud-native. Construo do zero: do design de APIs e decisões de arquitetura (ADRs) até pipelines CI/CD e integração com modelos de linguagem.
+Construo aplicações com inteligência artificial, agentes, RAG, automação, APIs e sistemas web. Minha base em desenvolvimento Full Stack e Microsoft Azure sustenta uma abordagem que considera arquitetura, testes, segurança, observabilidade e operação — não apenas a integração com o modelo.
 
-Meus projetos combinam padrões de produção reais — controle de concorrência com pg_advisory_xact_lock, mensageria assíncrona com RabbitMQ, agentes com function calling — com documentação de engenharia que explica o porquê de cada decisão, não só o como.
+Meu foco é usar IA dentro de sistemas controlados, com regras claras, validação de saída, logs, fallback, limites de autoridade e revisão humana quando a ação envolve risco.
 
-Uso o AI Software Engineer Studio, uma metodologia própria de construção spec-first assistida por IA, que produz sistemas com Context Pack, ADRs, relatórios de qualidade e segurança, e narrativa técnica pública.
+Desenvolvo uma versão pública e sanitizada do meu método para engenharia de software assistida por agentes. Ele mantém explícitas a responsabilidade humana, a seleção de contexto, os limites de autoridade e os gates de qualidade.
 
-Graduando em Análise e Desenvolvimento de Sistemas. Em certificação: AZ-204 (Azure Developer) e AI-102 (Azure AI Engineer).
+Sou Microsoft Certified Trainer (MCT), Microsoft Certified: Azure Administrator Associate e Microsoft Certified: Azure Fundamentals. Também curso Análise e Desenvolvimento de Sistemas na Descomplica Faculdade Digital.
 `,
 };
