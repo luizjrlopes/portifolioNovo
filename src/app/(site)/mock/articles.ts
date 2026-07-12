@@ -30,7 +30,7 @@ export const articles: ArticleMock[] = [
       "Como integrar LLMs em aplicacoes reais: da escolha do modelo a entrega em producao, com foco em latencia, custo e confiabilidade.",
     description:
       "Como integrar LLMs em aplicacoes reais: da escolha do modelo a entrega em producao, com foco em latencia, custo e confiabilidade.",
-    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/01-do-modelo-ao-produto.html",
+    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/Artigos_Secundarios/01-do-modelo-ao-produto.html",
     createdAt: "2025-10-01T00:00:00.000Z",
     date: "2025-10-01",
     tags: ["LLM", "Arquitetura", "Producao"],
@@ -43,7 +43,7 @@ export const articles: ArticleMock[] = [
       "Padrao RAG na pratica: indexacao de documentos em vector DB, estrategias de chunking, re-ranking e metricas de qualidade (RAGAS).",
     description:
       "Padrao RAG na pratica: indexacao de documentos em vector DB, estrategias de chunking, re-ranking e metricas de qualidade (RAGAS).",
-    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/03-rag-cardapios.html",
+    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/Artigos_Secundarios/03-rag-cardapios.html",
     createdAt: "2025-10-15T00:00:00.000Z",
     date: "2025-10-15",
     tags: ["RAG", "Vector DB", "LLM Engineering"],
@@ -56,7 +56,7 @@ export const articles: ArticleMock[] = [
       "Como combinar mensageria assincrona com pipelines de IA: desacoplamento, resiliencia e processamento em background via RabbitMQ e Kafka.",
     description:
       "Como combinar mensageria assincrona com pipelines de IA: desacoplamento, resiliencia e processamento em background via RabbitMQ e Kafka.",
-    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/09-arquiteturas-event-driven-ia.html",
+    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/Artigos_Secundarios/09-arquiteturas-event-driven-ia.html",
     createdAt: "2025-11-01T00:00:00.000Z",
     date: "2025-11-01",
     tags: ["Event-Driven", "RabbitMQ", "Arquitetura"],
@@ -69,7 +69,7 @@ export const articles: ArticleMock[] = [
       "Estrategias de teste para sistemas com LLMs: output probabilistico, BDD para contratos entre servicos e avaliacao com Langfuse.",
     description:
       "Estrategias de teste para sistemas com LLMs: output probabilistico, BDD para contratos entre servicos e avaliacao com Langfuse.",
-    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/10-testes-automatizados-sistemas-ia.html",
+    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/Artigos_Secundarios/10-testes-automatizados-sistemas-ia.html",
     createdAt: "2025-11-10T00:00:00.000Z",
     date: "2025-11-10",
     tags: ["Testes", "BDD", "LLMOps"],
@@ -82,7 +82,7 @@ export const articles: ArticleMock[] = [
       "Fundamentos de MLOps aplicados a LLMs: versionamento de modelos e prompts, CI para pipelines de IA, monitoramento de drift e observabilidade.",
     description:
       "Fundamentos de MLOps aplicados a LLMs: versionamento de modelos e prompts, CI para pipelines de IA, monitoramento de drift e observabilidade.",
-    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/11-basico-mlops-llmops.html",
+    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/Artigos_Secundarios/11-basico-mlops-llmops.html",
     createdAt: "2025-11-20T00:00:00.000Z",
     date: "2025-11-20",
     tags: ["MLOps", "LLMOps", "CI/CD"],
@@ -95,7 +95,7 @@ export const articles: ArticleMock[] = [
       "Tecnicas praticas para reduzir alucinacoes: grounding com RAG, validacao de output com schemas e guardrails.",
     description:
       "Tecnicas praticas para reduzir alucinacoes: grounding com RAG, validacao de output com schemas e guardrails.",
-    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/16-alucinacoes-llm-mitigacao.html",
+    url: "https://luizjrlopes.github.io/AI_Software_Engineering_Playbook/Artigos_Secundarios/16-alucinacoes-llm-mitigacao.html",
     createdAt: "2025-12-01T00:00:00.000Z",
     date: "2025-12-01",
     tags: ["LLM", "Confiabilidade", "Guardrails"],
